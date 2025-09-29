@@ -4,39 +4,6 @@ use quote::quote;
 use syn::{parse_macro_input, Data, DeriveInput};
 
 /// Macro that will generate Connection and Edge structs for you to use when returning lists.
-///
-/// The object that this is applied to must also #[derive(juniper::GraphQLObject)] otherwise you'll
-/// get a compilation error.
-///
-/// Given the following struct:
-///
-/// ```
-/// #[derive(juniper::GraphQLObject, RelayConnection)]
-/// struct PlayableCharacter {
-///     pub name: String,
-///     pub theme_song: String,
-/// }
-/// ```
-///
-/// The `RelayConnection` macro will generate two additional structs:
-///
-/// ```
-/// #[derive(juniper::GraphQLObject)]
-/// struct PlayableCharacterRelayConnection {
-///     count: usize,
-///     edges: Vec<PlayableCharacterRelayEdge>
-///     page_info: PageInfo
-/// }
-///
-/// #[derive(juniper::GraphQLObject)]
-/// struct PlayableCharacterRelayEdge {
-///     cursor: String,
-///     node: PlayableCharacter,
-/// }
-///
-/// ```
-///
-///
 #[proc_macro_derive(RelayConnection)]
 pub fn macro_relay_connection_node(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);

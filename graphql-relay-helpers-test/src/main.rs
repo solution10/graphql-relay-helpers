@@ -1,5 +1,5 @@
 mod connections;
 
 fn main() {
-    println!("Hello, world!");
+    println!("Not used...");
 }
