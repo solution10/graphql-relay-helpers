@@ -1,3 +1,6 @@
 [workspace]
 resolver = "3"
 members = [ "graphql-relay-helpers","graphql-relay-helpers-codegen", "graphql-relay-helpers-test"]
+
+[workspace.dependencies]
+juniper = { version = "0.17" }

@@ -1,15 +1,16 @@
 #[cfg(test)]
 mod tests {
+    use juniper::GraphQLObject;
     use graphql_relay_helpers::RelayConnection;
 
-    #[derive(Debug, RelayConnection)]
+    #[derive(Debug, RelayConnection, GraphQLObject)]
     struct User {
         name: String,
     }
 
     #[test]
     fn connection_types_are_generated() {
-        let conn = User_Connection {
+        let conn = UserRelayConnection {
             count: 12,
             edges: vec![]
         };
@@ -20,7 +21,7 @@ mod tests {
 
     #[test]
     fn edge_types_are_generated() {
-        let edge = User_Edge {
+        let edge = UserRelayEdge {
             node: User {
                 name: "Lune".to_owned(),
             },

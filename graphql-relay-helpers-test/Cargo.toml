@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 graphql-relay-helpers = { path = "../graphql-relay-helpers" }
+juniper = { workspace = true }

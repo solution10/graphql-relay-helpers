@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 
 graphql-relay-helpers-codegen = { path = "../graphql-relay-helpers-codegen" }
+juniper = { workspace = true }
