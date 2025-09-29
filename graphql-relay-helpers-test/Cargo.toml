@@ -1,0 +1,7 @@
+[package]
+name = "graphql-relay-helpers-test"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+graphql-relay-helpers = { path = "../graphql-relay-helpers" }

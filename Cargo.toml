@@ -1,0 +1,3 @@
+[workspace]
+resolver = "3"
+members = [ "graphql-relay-helpers","graphql-relay-helpers-codegen", "graphql-relay-helpers-test"]

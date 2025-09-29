@@ -1,0 +1,25 @@
+name: ⚒️ Build and test
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Rust version
+        run: rustup --version
+
+      - name: Build
+        run: make build-dev
+
+      - name: Tests
+        run: make test
