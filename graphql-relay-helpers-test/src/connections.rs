@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use juniper::GraphQLObject;
-    use graphql_relay_helpers::RelayConnection;
+    use graphql_relay_helpers::{PageInfo, RelayConnection};
 
     #[derive(Debug, RelayConnection, GraphQLObject)]
     struct User {
@@ -12,7 +12,13 @@ mod tests {
     fn connection_types_are_generated() {
         let conn = UserRelayConnection {
             count: 12,
-            edges: vec![]
+            edges: vec![],
+            page_info: PageInfo {
+                start_cursor: None,
+                end_cursor: None,
+                has_prev_page: false,
+                has_next_page: false
+            }
         };
 
         assert_eq!(conn.count, 12);
