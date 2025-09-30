@@ -1,9 +1,9 @@
 [package]
-name = "graphql-relay-helpers-test"
+name = "graphql_relay_helpers_test"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
 googletest = "0.14"
-graphql-relay-helpers = { path = "../graphql-relay-helpers" }
+graphql_relay_helpers = { path = "../graphql_relay_helpers" }
 juniper = { workspace = true, features = ["schema-language"] }

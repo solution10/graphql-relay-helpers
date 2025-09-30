@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = [ "graphql-relay-helpers","graphql-relay-helpers-codegen", "graphql-relay-helpers-test"]
+members = ["graphql_relay_helpers", "graphql_relay_helpers_codegen", "graphql_relay_helpers_test"]
 
 [workspace.dependencies]
 juniper = { version = "0.17" }

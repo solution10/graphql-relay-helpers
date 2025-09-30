@@ -1,0 +1,9 @@
+[package]
+name = "graphql_relay_helpers"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+
+graphql_relay_helpers_codegen = { path = "../graphql_relay_helpers_codegen" }
+juniper = { workspace = true }

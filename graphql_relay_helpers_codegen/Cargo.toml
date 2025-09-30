@@ -1,5 +1,5 @@
 [package]
-name = "graphql-relay-helpers-codegen"
+name = "graphql_relay_helpers_codegen"
 version = "0.1.0"
 edition = "2024"
 
