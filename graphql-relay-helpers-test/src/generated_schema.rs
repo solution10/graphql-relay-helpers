@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use assertor::{assert_that, StringAssertion};
+    use googletest::prelude::*;
     use juniper::{EmptyMutation, EmptySubscription, FieldResult, GraphQLObject, RootNode};
     use graphql_relay_helpers::{RelayConnection, PageInfo};
 
@@ -81,11 +81,13 @@ mod tests {
         let schema_document = build_schema();
         let schema_sdl = schema_document.as_sdl();
 
-        assert_that!(schema_sdl).contains("type UserConnection");
-        assert_that!(schema_sdl).contains("Connection type for User.");
+        assert_that!(schema_sdl, contains_substring("type UserConnection"));
 
-        assert_that!(schema_sdl).contains("type PostConnection");
-        assert_that!(schema_sdl).contains("Connection type for Post.");
+        assert_that!(schema_sdl, contains_substring("type UserConnection"));
+        assert_that!(schema_sdl, contains_substring("Connection type for User."));
+
+        assert_that!(schema_sdl, contains_substring("type PostConnection"));
+        assert_that!(schema_sdl, contains_substring("Connection type for Post."));
     }
 
     #[test]
@@ -93,11 +95,11 @@ mod tests {
         let schema_document = build_schema();
         let schema_sdl = schema_document.as_sdl();
 
-        assert_that!(schema_sdl).contains("type UserEdge");
-        assert_that!(schema_sdl).contains("Edge type for User.");
+        assert_that!(schema_sdl, contains_substring("type UserEdge"));
+        assert_that!(schema_sdl, contains_substring("Edge type for User."));
 
-        assert_that!(schema_sdl).contains("type PostEdge");
-        assert_that!(schema_sdl).contains("Edge type for Post.");
+        assert_that!(schema_sdl, contains_substring("type PostEdge"));
+        assert_that!(schema_sdl, contains_substring("Edge type for Post."));
     }
 
     #[test]
@@ -105,7 +107,7 @@ mod tests {
         let schema_document = build_schema();
         let schema_sdl = schema_document.as_sdl();
 
-        assert_that!(schema_sdl).contains("type PageInfo");
-        assert_that!(schema_sdl).contains("Pagination information");
+        assert_that!(schema_sdl, contains_substring("type PageInfo"));
+        assert_that!(schema_sdl, contains_substring("Pagination information"));
     }
 }
