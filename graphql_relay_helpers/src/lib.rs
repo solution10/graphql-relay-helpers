@@ -11,11 +11,12 @@
 //!
 //! Given the following struct:
 //!
-//! ```no_compile,rust
+//! ```
 //! use juniper::GraphQLObject;
-//! # use graphql_relay_helpers_codegen::RelayConnection;
+//! # use graphql_relay_helpers_codegen::{RelayConnection};
+//! # use graphql_relay_helpers::PageInfo;
 //!
-//! #[derive(Debug, GraphQLObject, RelayConnection)]
+//! #[derive(Debug, GraphQLObject, RelayConnection, Clone, Eq, PartialEq)]
 //! struct PlayableCharacter {
 //!     pub name: String,
 //!     pub theme_song: String,
@@ -24,20 +25,20 @@
 //!
 //! The `RelayConnection` macro will generate two additional structs:
 //!
-//! ```no_compile,rust
-//! use juniper::GraphQLObject;
-//! # use graphql_relay_helpers_codegen::RelayConnection;
+//! ```rust
+//! # use juniper::GraphQLObject;
+//! # use graphql_relay_helpers::PageInfo;
 //!
-//! #[derive(Debug, GraphQLObject, RelayConnection)]
-//! struct PlayableCharacter {
-//!     pub name: String,
-//!     pub theme_song: String,
-//! }
+//! # #[derive(GraphQLObject)]
+//! # struct PlayableCharacter {
+//! #     pub name: String,
+//! #     pub theme_song: String,
+//! # }
 //!
 //! // Generated structs:
 //! #[derive(GraphQLObject)]
 //! struct PlayableCharacterRelayConnection {
-//!     count: usize,
+//!     count: i32,
 //!     edges: Vec<PlayableCharacterRelayEdge>,
 //!     page_info: PageInfo
 //! }
