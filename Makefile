@@ -1,7 +1,7 @@
 # Build with dev symbols (non production)
 build-dev:
-	cargo build
+	cargo build --verbose
 
 # Run all the tests
 test:
-	cargo test
+	cargo test --verbose
