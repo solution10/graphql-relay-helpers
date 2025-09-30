@@ -4,5 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+assertor = "0.0.4"
 graphql-relay-helpers = { path = "../graphql-relay-helpers" }
-juniper = { workspace = true }
+juniper = { workspace = true, features = ["schema-language"] }

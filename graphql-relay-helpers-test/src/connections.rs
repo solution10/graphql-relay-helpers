@@ -3,7 +3,7 @@ mod tests {
     use juniper::GraphQLObject;
     use graphql_relay_helpers::{PageInfo, RelayConnection};
 
-    #[derive(Debug, RelayConnection, GraphQLObject)]
+    #[derive(Debug, RelayConnection, GraphQLObject, Clone, Eq, PartialEq)]
     struct User {
         name: String,
     }
