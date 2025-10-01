@@ -19,7 +19,7 @@
 //! SQL LIMIT and OFFSET.
 //!
 //! ```
-//! # use graphql_relay_helpers::{Cursor, OffsetCursor};
+//! # use graphql_relay_helpers::{cursor_from_encoded_string, Cursor, OffsetCursor};
 //! #
 //! # fn cursors() {
 //! let cursor = OffsetCursor { offset: 1, first: 10 };
@@ -32,6 +32,7 @@
 //!
 //! // You can also decode the cursor from the base64 encoded string
 //! let decoded_cursor = OffsetCursor::from_encoded_string(&encoded_string).unwrap();
+//! let decoded_cursor_turbo = cursor_from_encoded_string::<OffsetCursor>(&encoded_string).unwrap();
 //! #
 //! # }
 //! ```
@@ -119,6 +120,7 @@
 mod pagination;
 mod cursors;
 mod cursor_errors;
+mod cursor_provider;
 
 // From other crates in the workspace:
 pub use graphql_relay_helpers_codegen::*;

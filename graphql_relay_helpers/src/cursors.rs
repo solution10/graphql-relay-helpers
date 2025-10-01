@@ -36,7 +36,7 @@ pub trait Cursor {
     }
 }
 
-/// Decodes a token from a base64 encoded string into the correct concrete instance type.
+/// Decodes a cursor from a base64 encoded string into the correct concrete instance type.
 /// Use the Turbofish `::<>()` syntax to tell the method what that correct type is.
 ///
 /// For instance, to parse out an Offset cursor:
@@ -84,18 +84,36 @@ impl Display for OffsetCursor {
     }
 }
 
-/// Trait to implement when building a Relay cursor provider.
-///
-/// Cursor providers are how we generate cursors for each of the individual items
-/// within the result set, without needing to do a pass and build them manually.
-pub trait CursorProvider {
-    fn get_cursor(&self, ) -> String;
+/// Built-in cursor type for when the cursor is just a string. Usually useful for things like
+/// NoSQL systems that return something opaque to you.
+#[derive(Debug)]
+pub struct StringCursor {
+    /// The value of the cursor.
+    value: String,
+}
+
+impl Cursor for StringCursor {
+    type CursorType = StringCursor;
+
+    fn to_raw_string(&self) -> String {
+        format!("string:{}", self.value.clone())
+    }
+
+    fn new(_raw: &str, parts: Vec<&str>) -> Result<Self::CursorType, CursorError> {
+        let raw_parts_value= parts[1].to_string();
+        Ok(StringCursor { value: raw_parts_value })
+    }
+}
+impl Display for StringCursor {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.to_raw_string())
+    }
 }
 
 
-#[ cfg(test)]
+#[cfg(test)]
 mod tests {
-    use crate::Cursor;
+    use crate::{Cursor, StringCursor};
     use crate::cursors::OffsetCursor;
 
     #[test]
@@ -115,5 +133,23 @@ mod tests {
         let cursor = OffsetCursor::from_encoded_string("b2Zmc2V0OjE6MTA=").unwrap();
         assert_eq!(cursor.offset, 1);
         assert_eq!(cursor.first, 10);
+    }
+
+    #[test]
+    fn test_string_cursor_raw_string() {
+        let cursor = StringCursor { value: "some-cursor".to_string() };
+        assert_eq!(cursor.to_string(), "string:some-cursor");
+    }
+
+    #[test]
+    fn test_string_cursor_encoded_string() {
+        let cursor = StringCursor { value: "some-cursor".to_string() };
+        assert_eq!(cursor.to_encoded_string(), "c3RyaW5nOnNvbWUtY3Vyc29y");
+    }
+
+    #[test]
+    fn test_string_cursor_from_encoded_string() {
+        let cursor = StringCursor::from_encoded_string("c3RyaW5nOnNvbWUtY3Vyc29y").unwrap();
+        assert_eq!(cursor.value, "some-cursor");
     }
 }
