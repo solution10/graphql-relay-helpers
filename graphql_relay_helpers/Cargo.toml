@@ -7,3 +7,4 @@ edition = "2024"
 
 graphql_relay_helpers_codegen = { path = "../graphql_relay_helpers_codegen" }
 juniper = { workspace = true }
+base64 = "0.22"
