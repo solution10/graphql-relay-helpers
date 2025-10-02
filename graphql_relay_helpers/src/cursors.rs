@@ -8,7 +8,7 @@ use crate::cursor_errors::CursorError;
 /// You can implement this trait for your own cursor type if it's not covered by this library.
 /// You can also use the built-in Cursors:
 ///     - OffsetCursor
-///
+///     - StringCursor
 ///
 pub trait Cursor {
     /// Concrete type of the returned cursor. Usually the thing that implements the trait.

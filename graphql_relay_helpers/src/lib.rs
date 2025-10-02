@@ -8,7 +8,19 @@
 //!
 //! ## PageInfo
 //!
-//! The PageInfo struct is a ready to use GraphQLObject that conforms to the Relay spec.
+//! The PageInfo struct is a ready to use GraphQLObject that conforms to the Relay spec. This struct
+//! is added to your Connection types generated from `RelayConnection`.
+//!
+//! It'll add the type:
+//!
+//! ```graphql
+//! type PageInfo {
+//!     hasNextPage: Boolean!
+//!     hasPreviousPage: Boolean!
+//!     startCursor: String
+//!     endCursor: String
+//! }
+//! ```
 //!
 //! ## Cursors
 //!
@@ -48,6 +60,54 @@
 //! in the result set.
 //!
 //! todo().
+//!
+//! # Identifiers
+//!
+//! Relay requires nodes to have unique identifiers specified by `ID` type. Often you want to encode
+//! some useful type information into that identifier. The library contains a simple `RelayIdentifier`
+//! struct that can be used to do this.
+//!
+//! ```
+//! use std::fmt::{Display, Formatter};
+//! use std::str::FromStr;
+//! use graphql_relay_helpers::{RelayIdentifier};
+//!
+//! # fn identifiers() {
+//! enum MyTypes {
+//!     Character,
+//!     Enemy
+//! }
+//!
+//! // Your type should implement Display so that it can be encoded correctly.
+//! impl Display for MyTypes {
+//!     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+//!         match self {
+//!             MyTypes::Character => { write!(f, "character") }
+//!             MyTypes::Enemy => { write!(f, "enemy") }
+//!         }
+//!     }
+//! }
+//!
+//! // Your type also needs to implement FromStr trait so that we can decode correctly.
+//! impl FromStr for MyTypes {
+//!     type Err = &'static str;
+//!
+//!     fn from_str(s: &str) -> Result<Self, Self::Err> {
+//!        match s {
+//!            "character" => Ok(MyTypes::Character),
+//!             "enemy" => Ok(MyTypes::Enemy),
+//!             &_ => Err("Invalid type delimiter")
+//!        }
+//!     }
+//! }
+//!
+//! let id = RelayIdentifier::new("123".to_string(), MyTypes::Character);
+//! # }
+//!```
+//!
+//! This generates a base64 encoded string of the format `type_delimiter::identifier`. It is also
+//! implemented as a `GraphQLScalar` for use directly in Juniper, so you can return it directly from
+//! your DTO object or field resolver.
 //!
 //! # Code Generation
 //!
@@ -121,6 +181,7 @@ mod pagination;
 mod cursors;
 mod cursor_errors;
 mod cursor_provider;
+mod identifier;
 
 // From other crates in the workspace:
 pub use graphql_relay_helpers_codegen::*;
@@ -129,3 +190,4 @@ pub use graphql_relay_helpers_codegen::*;
 pub use pagination::*;
 pub use cursors::*;
 pub use cursor_errors::*;
+pub use identifier::*;

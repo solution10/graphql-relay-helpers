@@ -12,8 +12,8 @@ The library is being actively developed - here's the WIP status:
 - [x] Add support for opaque cursor generation
   - [x] Add `OffsetCursor` implementation
   - [x] Add `StringCursor` implementation  
-- [ ] Add `PageInfo` struct
-- [ ] Add support for identifiers
+- [x] Add `PageInfo` struct
+- [x] Add support for identifiers
 - [ ] Add support for `CursorProvider` to make generating cursors on Connections better.
 - [ ] Add example Juniper application
 - [ ] Publish crate
