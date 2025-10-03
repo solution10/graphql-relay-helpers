@@ -1,7 +1,8 @@
 #[cfg(test)]
 mod tests {
     use juniper::GraphQLObject;
-    use graphql_relay_helpers::{PageInfo, RelayConnection};
+    use graphql_relay_helpers_codegen::RelayConnection;
+    use crate::PageInfo;
 
     #[derive(Debug, RelayConnection, GraphQLObject, Clone, Eq, PartialEq)]
     struct User {

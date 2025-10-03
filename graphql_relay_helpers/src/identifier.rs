@@ -12,6 +12,7 @@ const SEGMENT_DELIMITER: &str = "::";
 /// and return it as part of your field resolvers / DTOs.
 #[derive(Debug, GraphQLScalar, Clone, Eq, PartialEq, Hash)]
 #[graphql(
+    name = "ID",
     to_output_with = Self::to_output,
     from_input_with = Self::from_input,
     parse_token_with = Self::parse_token

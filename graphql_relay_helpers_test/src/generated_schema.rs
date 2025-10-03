@@ -1,5 +1,5 @@
 #[cfg(test)]
-mod tests {
+mod integration_tests {
     use googletest::prelude::*;
     use juniper::{EmptyMutation, EmptySubscription, FieldResult, GraphQLObject, RootNode};
     use graphql_relay_helpers::{RelayConnection, PageInfo};

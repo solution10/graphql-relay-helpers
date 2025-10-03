@@ -7,3 +7,13 @@ edition = "2024"
 googletest = "0.14"
 graphql_relay_helpers = { path = "../graphql_relay_helpers" }
 juniper = { workspace = true, features = ["schema-language"] }
+uuid = { workspace = true, features = ["v4"] }
+
+# Test server deps:
+tokio = {  version = "1", features = ["full"] }
+axum = "0.8"
+juniper_axum = "0.3"
+axum-test = "18"
+tracing = { version = "0.1", features = ["log"] }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+serde = { version = "1.0.228", features = ["derive"] }

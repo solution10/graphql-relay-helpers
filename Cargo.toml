@@ -4,3 +4,5 @@ members = ["graphql_relay_helpers", "graphql_relay_helpers_codegen", "graphql_re
 
 [workspace.dependencies]
 juniper = { version = "0.17" }
+base64 = "0.22"
+uuid = "1"

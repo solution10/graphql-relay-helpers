@@ -182,6 +182,7 @@ mod cursors;
 mod cursor_errors;
 mod cursor_provider;
 mod identifier;
+mod connections;
 
 // From other crates in the workspace:
 pub use graphql_relay_helpers_codegen::*;

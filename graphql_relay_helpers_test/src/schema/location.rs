@@ -1,0 +1,37 @@
+use juniper::GraphQLObject;
+use graphql_relay_helpers::{RelayConnection, RelayIdentifier, PageInfo};
+
+use crate::schema::identifiers::{EntityType};
+
+/// "Database" row for a location.
+#[derive(Clone)]
+pub struct LocationRow {
+    pub id: String,
+    pub name: String,
+}
+
+/// GraphQL type for a character.
+#[derive(GraphQLObject, RelayConnection, Debug, Eq, PartialEq, Clone)]
+pub struct Location {
+    pub id: RelayIdentifier<String, EntityType>,
+    pub name: String,
+}
+
+// ----------- Test data ------------------
+
+pub fn get_location_test_data() -> Vec<LocationRow> {
+    vec![
+        LocationRow {
+            id: "lumiere".to_string(),
+            name: "Lumiére".to_string()
+        },
+        LocationRow {
+            id: "esquies-nest".to_string(),
+            name: "Esquie's Nest".to_string()
+        },
+        LocationRow {
+            id: "monocos-station".to_string(),
+            name: "Monoco's Station".to_string()
+        },
+    ]
+}
