@@ -137,8 +137,10 @@ mod integration_tests {
         use axum_test::expect_json;
         use axum_test::TestServer;
         use serde::{Deserialize, Serialize};
+        use graphql_relay_helpers::RelayIdentifier;
         use crate::build_app;
         use crate::integration_tests::{ALL_CHARACTERS_QUERY, ALL_LOCATIONS_QUERY};
+        use crate::schema::{get_character_test_data, get_location_test_data, EntityType};
 
         #[derive(Serialize, Deserialize, Debug, Clone)]
         struct GraphQLPayload {
@@ -222,6 +224,74 @@ mod integration_tests {
                     }))
                 }))
             }))
+        }
+
+        #[tokio::test]
+        async fn test_relay_identifier_uuid() {
+            let app = build_app();
+            let server = TestServer::new(app).unwrap();
+            let response = server
+                .post("/graphql")
+                .json(&GraphQLPayload {
+                    query: ALL_CHARACTERS_QUERY.to_string(),
+                    variables: Some(serde_json::Value::Object(serde_json::Map::new()))
+                })
+                .await;
+
+            let character_data = get_character_test_data();
+
+            response.assert_json(&json!({
+                "data": expect_json::object().contains(json!({
+                    "characters": expect_json::object().contains(json!({
+                        "edges": expect_json::array().contains(
+                            character_data.iter().map(|character| {
+                                let identifier = RelayIdentifier::new(character.id, EntityType::Character);
+                                json!({
+                                    "node": expect_json::object().contains(json!({
+                                        "id": identifier.to_encoded_string(),
+                                        "name": character.name,
+                                    })),
+                                    "cursor": expect_json::string(),
+                                })
+                            })
+                        )
+                    }))
+                }))
+            }));
+        }
+
+        #[tokio::test]
+        async fn test_relay_identifier_string() {
+            let app = build_app();
+            let server = TestServer::new(app).unwrap();
+            let response = server
+                .post("/graphql")
+                .json(&GraphQLPayload {
+                    query: ALL_LOCATIONS_QUERY.to_string(),
+                    variables: Some(serde_json::Value::Object(serde_json::Map::new()))
+                })
+                .await;
+
+            let location_data = get_location_test_data();
+
+            response.assert_json(&json!({
+                "data": expect_json::object().contains(json!({
+                    "locations": expect_json::object().contains(json!({
+                        "edges": expect_json::array().contains(
+                            location_data.iter().map(|location| {
+                                let identifier = RelayIdentifier::new(location.id.to_string(), EntityType::Location);
+                                json!({
+                                    "node": expect_json::object().contains(json!({
+                                        "id": identifier.to_encoded_string(),
+                                        "name": location.name,
+                                    })),
+                                    "cursor": expect_json::string(),
+                                })
+                            })
+                        )
+                    }))
+                }))
+            }));
         }
     }
 }

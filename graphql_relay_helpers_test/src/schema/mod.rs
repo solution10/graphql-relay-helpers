@@ -1,8 +1,8 @@
 use juniper::{EmptyMutation, EmptySubscription, FieldResult, RootNode};
 use graphql_relay_helpers::{OffsetCursor, PageInfo, RelayIdentifier};
-use crate::schema::character::{Character, CharacterRelayConnection, CharacterRelayEdge, CharacterRow};
-use crate::schema::identifiers::EntityType;
-use crate::schema::location::{Location, LocationRelayConnection, LocationRelayEdge, LocationRow};
+pub use crate::schema::character::{Character, CharacterRelayConnection, CharacterRelayEdge, CharacterRow};
+pub use crate::schema::identifiers::EntityType;
+pub use crate::schema::location::{Location, LocationRelayConnection, LocationRelayEdge, LocationRow};
 
 mod identifiers;
 mod character;

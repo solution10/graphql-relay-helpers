@@ -36,12 +36,14 @@ impl<T, TD> RelayIdentifier<T, TD> where T: Display, T: FromStr, TD: Display, TD
         Self { id, type_delimiter }
     }
 
+    pub fn to_encoded_string(&self) -> String {
+        BASE64_URL_SAFE.encode(self.to_string())
+    }
+
     // ---------- GraphQLScalar implementation ----------
 
     pub fn to_output(&self) -> juniper::ID {
-        juniper::ID::from(
-            BASE64_URL_SAFE.encode(self.to_string())
-        )
+        juniper::ID::from(self.to_encoded_string())
     }
 
     pub fn from_input(input: &str) -> Result<Self, Box<str>> {
