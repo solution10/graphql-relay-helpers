@@ -1,5 +1,6 @@
 use std::fmt::{Display, Formatter};
 use base64::prelude::*;
+use juniper::{GraphQLScalar, ParseScalarResult, ParseScalarValue, ScalarToken, ScalarValue};
 use crate::cursor_errors::CursorError;
 
 /// Cursor struct that builds into an opaque string.
@@ -9,6 +10,21 @@ use crate::cursor_errors::CursorError;
 /// You can also use the built-in Cursors:
 ///     - OffsetCursor
 ///     - StringCursor
+///
+/// This trait implements the common methods needed to be considered a `GraphQlScalar`
+/// which means you can add the following to your struct and it will work
+/// out of the box:
+///
+/// ```nocompile
+/// #[derive(Debug, GraphQLScalar)]
+/// #[graphql(
+///     name = "MyCursor",
+///     to_output_with = Self::to_output,
+///     from_input_with = Self::from_input
+/// )]
+/// struct MyCursor {}
+/// impl Cursor for MyCursor { ... }
+/// ```
 ///
 pub trait Cursor {
     /// Concrete type of the returned cursor. Usually the thing that implements the trait.
@@ -34,6 +50,24 @@ pub trait Cursor {
     fn to_encoded_string(&self) -> String {
         BASE64_URL_SAFE.encode(self.to_raw_string().as_bytes())
     }
+
+    // ------------- GraphQLScalar implementations --------------
+
+    fn to_output(&self) -> String {
+        self.to_encoded_string()
+    }
+
+    fn from_input(input: &str) -> Result<Self::CursorType, Box<str>> {
+        let res = Self::from_encoded_string(input);
+        match res {
+            Ok(cursor) => Ok(cursor),
+            Err(err) => Err(err.to_string().into_boxed_str())
+        }
+    }
+
+    fn parse_token<S: ScalarValue>(value: ScalarToken<'_>) -> ParseScalarResult<S> {
+        <String as ParseScalarValue<S>>::from_str(value)
+    }
 }
 
 /// Decodes a cursor from a base64 encoded string into the correct concrete instance type.
@@ -55,7 +89,12 @@ pub fn cursor_from_encoded_string<T>(input: &str) -> Result<T, CursorError> wher
 }
 
 /// A simple offset-based cursor.
-#[derive(Debug)]
+#[derive(Debug, GraphQLScalar)]
+#[graphql(
+    name = "OffsetCursor",
+    to_output_with = Self::to_output,
+    from_input_with = Self::from_input
+)]
 pub struct OffsetCursor {
     /// The offset of the cursor (how many items to skip).
     pub offset: i32,
@@ -86,7 +125,7 @@ impl Display for OffsetCursor {
 
 /// Built-in cursor type for when the cursor is just a string. Usually useful for things like
 /// NoSQL systems that return something opaque to you.
-#[derive(Debug)]
+#[derive(Debug, GraphQLScalar)]
 pub struct StringCursor {
     /// The value of the cursor.
     value: String,

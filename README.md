@@ -16,6 +16,6 @@ The library is being actively developed - here's the WIP status:
 - [x] Add support for identifiers
 - [ ] Add support for `CursorProvider` to make generating cursors on Connections better.
 - [x] Add example Axum & Juniper application
-- [ ] Add cursor scalar serialization
-- [ ] rename crate
+- [x] Add cursor scalar serialization
+- [x] rename crate
 - [ ] Publish crate
