@@ -15,5 +15,5 @@ The library is being actively developed - here's the WIP status:
 - [x] Add `PageInfo` struct
 - [x] Add support for identifiers
 - [ ] Add support for `CursorProvider` to make generating cursors on Connections better.
-- [ ] Add example Juniper application
+- [x] Add example Axum & Juniper application
 - [ ] Publish crate

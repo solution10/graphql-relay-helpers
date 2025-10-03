@@ -71,34 +71,14 @@
 //! use std::fmt::{Display, Formatter};
 //! use std::str::FromStr;
 //! use graphql_relay_helpers::{RelayIdentifier};
+//! #
+//! use graphql_relay_helpers_codegen::IdentifierTypeDiscriminator;
 //!
-//! # fn identifiers() {
+//! fn identifiers() {
+//! #[derive(IdentifierTypeDiscriminator)]
 //! enum MyTypes {
 //!     Character,
 //!     Enemy
-//! }
-//!
-//! // Your type should implement Display so that it can be encoded correctly.
-//! impl Display for MyTypes {
-//!     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-//!         match self {
-//!             MyTypes::Character => { write!(f, "character") }
-//!             MyTypes::Enemy => { write!(f, "enemy") }
-//!         }
-//!     }
-//! }
-//!
-//! // Your type also needs to implement FromStr trait so that we can decode correctly.
-//! impl FromStr for MyTypes {
-//!     type Err = &'static str;
-//!
-//!     fn from_str(s: &str) -> Result<Self, Self::Err> {
-//!        match s {
-//!            "character" => Ok(MyTypes::Character),
-//!             "enemy" => Ok(MyTypes::Enemy),
-//!             &_ => Err("Invalid type delimiter")
-//!        }
-//!     }
 //! }
 //!
 //! let id = RelayIdentifier::new("123".to_string(), MyTypes::Character);
@@ -108,6 +88,9 @@
 //! This generates a base64 encoded string of the format `type_delimiter::identifier`. It is also
 //! implemented as a `GraphQLScalar` for use directly in Juniper, so you can return it directly from
 //! your DTO object or field resolver.
+//!
+//! **Note** that you need to implement `Display` and `FromStr` yourself for the type discriminator
+//! enum. You can either do this manually, OR use the `IdentifierTypeDiscriminator` derive macro.
 //!
 //! # Code Generation
 //!

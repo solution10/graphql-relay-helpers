@@ -41,7 +41,74 @@ pub fn macro_relay_connection_node(input: TokenStream) -> TokenStream {
                 }
             }
         }
-        _ => todo!() // Actually this should throw.
+        _ => quote! {}
+    };
+
+    out.into()
+}
+
+/// Macro for extending an Enum with the traits required for it to be used as a type discriminator
+/// within a relay identifier.
+///
+/// Equivalent to implementing `Display` and `FromStr` yourself, just saves you the hassle.
+///
+/// Allows:
+///
+/// ```nocompile
+/// use crate::IdentifierTypeDiscriminator;
+///
+/// #[derive(IdentifierTypeDiscriminator)]
+/// enum EntityType {
+///     Character,
+///     Weapon,
+/// }
+/// ```
+///
+/// `EntityType` can now be used in `RelayIdentifier(123, EntityType::Character)` without
+/// any additional code.
+///
+#[proc_macro_derive(IdentifierTypeDiscriminator)]
+pub fn macro_type_discriminator(input: TokenStream) -> TokenStream {
+    let input = parse_macro_input!(input as DeriveInput);
+
+    let out = match input.data {
+        Data::Enum(e) => {
+            let enum_name = input.ident;
+            let enum_display_variants = e.variants.iter().map(|v| {
+                let v_string = v.ident.to_string().to_lowercase();
+                quote! {
+                    #enum_name::#v => { write!(f, #v_string) }
+                }
+            });
+            let fromstr_display_variants = e.variants.iter().map(|v| {
+                let v_string = v.ident.to_string().to_lowercase();
+                let v = v.ident.clone();
+                quote! {
+                    #v_string => Ok(#enum_name::#v)
+                }
+            });
+
+            quote! {
+                impl Display for #enum_name {
+                    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+                        match self {
+                            #(#enum_display_variants),*
+                        }
+                    }
+                }
+
+                impl FromStr for #enum_name {
+                    type Err = &'static str;
+                    fn from_str(s: &str) -> Result<Self, Self::Err> {
+                        match s {
+                            #(#fromstr_display_variants),*,
+                            &_ => Err("Invalid type delimiter")
+                        }
+                    }
+                }
+            }
+        }
+        _ => quote! {}
     };
 
     out.into()

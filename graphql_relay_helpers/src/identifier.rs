@@ -19,13 +19,13 @@ const SEGMENT_DELIMITER: &str = "::";
 )]
 pub struct RelayIdentifier<T, TD> where T: Display, T: FromStr, TD: Display, TD: FromStr {
     pub id: T,
-    pub type_delimiter: TD,
+    pub type_discriminator: TD,
 }
 
 /// Implement Display
 impl<T, TD> Display for RelayIdentifier<T, TD> where T: Display, T: FromStr, TD: Display, TD: FromStr {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}{}{}", self.type_delimiter, SEGMENT_DELIMITER, self.id)
+        write!(f, "{}{}{}", self.type_discriminator, SEGMENT_DELIMITER, self.id)
     }
 }
 
@@ -33,7 +33,7 @@ impl<T, TD> Display for RelayIdentifier<T, TD> where T: Display, T: FromStr, TD:
 impl<T, TD> RelayIdentifier<T, TD> where T: Display, T: FromStr, TD: Display, TD: FromStr {
     /// General constructor
     pub fn new(id: T, type_delimiter: TD) -> Self {
-        Self { id, type_delimiter }
+        Self { id, type_discriminator: type_delimiter }
     }
 
     pub fn to_encoded_string(&self) -> String {
@@ -81,55 +81,37 @@ mod tests {
     use base64::Engine;
     use base64::prelude::BASE64_URL_SAFE;
     use uuid::Uuid;
+    use graphql_relay_helpers_codegen::{IdentifierTypeDiscriminator};
     use crate::identifier::RelayIdentifier;
 
-    #[derive(PartialEq, Eq, Debug)]
-    enum TestTypeDelimiter {
+    #[derive(IdentifierTypeDiscriminator, PartialEq, Eq, Debug)]
+    enum TestTypeDiscriminator {
         Character,
         Weapon
-    }
-    impl Display for TestTypeDelimiter {
-        fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-            match self {
-                TestTypeDelimiter::Character => { write!(f, "character") }
-                TestTypeDelimiter::Weapon => { write!(f, "weapon") }
-            }
-        }
-    }
-    impl FromStr for TestTypeDelimiter {
-        type Err = &'static str;
-
-        fn from_str(s: &str) -> Result<Self, Self::Err> {
-            match s {
-                "character" => Ok(TestTypeDelimiter::Character),
-                "weapon" => Ok(TestTypeDelimiter::Weapon),
-                &_ => Err("Invalid type delimiter")
-            }
-        }
     }
 
     #[test]
     fn test_string_identifiers() {
-        let id = RelayIdentifier { id: "123".to_string(), type_delimiter: TestTypeDelimiter::Character };
+        let id = RelayIdentifier { id: "123".to_string(), type_discriminator: TestTypeDiscriminator::Character };
         assert_eq!(id.to_string(), "character::123");
     }
 
     #[test]
     fn test_i32_identifiers() {
-        let id = RelayIdentifier::new(123, TestTypeDelimiter::Weapon);
+        let id = RelayIdentifier::new(123, TestTypeDiscriminator::Weapon);
         assert_eq!(id.to_string(), "weapon::123");
     }
 
     #[test]
     fn test_uuid_identifiers() {
         let uuid = Uuid::new_v4();
-        let id = RelayIdentifier::new(uuid, TestTypeDelimiter::Character);
+        let id = RelayIdentifier::new(uuid, TestTypeDiscriminator::Character);
         assert_eq!(id.to_string(), format!("character::{}", uuid));
     }
 
     #[test]
     fn test_to_output() {
-        let id = RelayIdentifier::new("123".to_string(), TestTypeDelimiter::Character);
+        let id = RelayIdentifier::new("123".to_string(), TestTypeDiscriminator::Character);
         let output = id.to_output();
         assert_eq!(output.to_string(), "Y2hhcmFjdGVyOjoxMjM=");
     }
@@ -137,31 +119,31 @@ mod tests {
     #[test]
     fn test_from_input_string() {
         let input = "Y2hhcmFjdGVyOjoxMjM=";
-        let identifier = RelayIdentifier::<String, TestTypeDelimiter>::from_input(input).unwrap();
+        let identifier = RelayIdentifier::<String, TestTypeDiscriminator>::from_input(input).unwrap();
         assert_eq!(identifier.id, "123");
-        assert_eq!(identifier.type_delimiter, TestTypeDelimiter::Character);
+        assert_eq!(identifier.type_discriminator, TestTypeDiscriminator::Character);
     }
 
     #[test]
     fn test_from_input_i32() {
         let input = "d2VhcG9uOjoxMjM=";
-        let identifier = RelayIdentifier::<i32, TestTypeDelimiter>::from_input(input).unwrap();
+        let identifier = RelayIdentifier::<i32, TestTypeDiscriminator>::from_input(input).unwrap();
         assert_eq!(identifier.id, 123);
-        assert_eq!(identifier.type_delimiter, TestTypeDelimiter::Weapon);
+        assert_eq!(identifier.type_discriminator, TestTypeDiscriminator::Weapon);
     }
 
     #[test]
     fn test_from_input_uuid() {
         let input = "Y2hhcmFjdGVyOjo3Mzk2YWEyZi0wM2RmLTQyZDYtYWFlMS1jZjBlOTE4MmYwZDI=";
-        let identifier = RelayIdentifier::<Uuid, TestTypeDelimiter>::from_input(input).unwrap();
+        let identifier = RelayIdentifier::<Uuid, TestTypeDiscriminator>::from_input(input).unwrap();
         assert_eq!(identifier.id, Uuid::parse_str("7396aa2f-03df-42d6-aae1-cf0e9182f0d2").unwrap());
-        assert_eq!(identifier.type_delimiter, TestTypeDelimiter::Character);
+        assert_eq!(identifier.type_discriminator, TestTypeDiscriminator::Character);
     }
 
     #[test]
     fn test_from_invalid_base64() {
         let input = "Y2hhcmFjdGVyOjo3Mzk2YWEyZi0wM2RmLTQyZDYtYWFlMS1jZjBlOTE4MmYwZDI";
-        let result = RelayIdentifier::<Uuid, TestTypeDelimiter>::from_input(input);
+        let result = RelayIdentifier::<Uuid, TestTypeDiscriminator>::from_input(input);
         assert!(result.is_err());
         assert_eq!(result.unwrap_err().to_string(), "Invalid base64 encoding: Invalid padding");
     }
@@ -169,7 +151,7 @@ mod tests {
     #[test]
     fn test_from_invalid_utf8() {
         let input = BASE64_URL_SAFE.encode(vec![0x80]);
-        let result = RelayIdentifier::<Uuid, TestTypeDelimiter>::from_input(&input);
+        let result = RelayIdentifier::<Uuid, TestTypeDiscriminator>::from_input(&input);
         assert!(result.is_err());
         assert_eq!(result.unwrap_err().to_string(), "Invalid UTF-8 encoding: invalid utf-8 sequence of 1 bytes from index 0");
     }
@@ -177,7 +159,7 @@ mod tests {
     #[test]
     fn test_invalid_identifier_format() {
         let input = BASE64_URL_SAFE.encode("character//123".to_string());
-        let result = RelayIdentifier::<String, TestTypeDelimiter>::from_input(&input);
+        let result = RelayIdentifier::<String, TestTypeDiscriminator>::from_input(&input);
         assert!(result.is_err());
         assert_eq!(result.unwrap_err().to_string(), "Invalid Relay identifier");
     }
