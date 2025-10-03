@@ -1,5 +1,5 @@
 use juniper::GraphQLObject;
-use graphql_relay_helpers::{RelayConnection, RelayIdentifier, PageInfo};
+use juniper_relay_helpers::{RelayConnection, RelayIdentifier, PageInfo};
 
 use crate::schema::identifiers::{EntityType};
 

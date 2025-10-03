@@ -137,7 +137,7 @@ mod integration_tests {
         use axum_test::expect_json;
         use axum_test::TestServer;
         use serde::{Deserialize, Serialize};
-        use graphql_relay_helpers::RelayIdentifier;
+        use juniper_relay_helpers::RelayIdentifier;
         use crate::build_app;
         use crate::integration_tests::{ALL_CHARACTERS_QUERY, ALL_LOCATIONS_QUERY};
         use crate::schema::{get_character_test_data, get_location_test_data, EntityType};

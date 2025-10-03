@@ -81,7 +81,7 @@ mod tests {
     use base64::Engine;
     use base64::prelude::BASE64_URL_SAFE;
     use uuid::Uuid;
-    use graphql_relay_helpers_codegen::{IdentifierTypeDiscriminator};
+    use juniper_relay_helpers_codegen::{IdentifierTypeDiscriminator};
     use crate::identifier::RelayIdentifier;
 
     #[derive(IdentifierTypeDiscriminator, PartialEq, Eq, Debug)]

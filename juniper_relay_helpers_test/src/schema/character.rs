@@ -1,7 +1,7 @@
 use std::str::FromStr;
 use juniper::GraphQLObject;
 use uuid::Uuid;
-use graphql_relay_helpers::{RelayConnection, RelayIdentifier, PageInfo};
+use juniper_relay_helpers::{RelayConnection, RelayIdentifier, PageInfo};
 
 use crate::schema::identifiers::{EntityType};
 

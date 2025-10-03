@@ -2,7 +2,7 @@
 mod integration_tests {
     use googletest::prelude::*;
     use juniper::{EmptyMutation, EmptySubscription, FieldResult, GraphQLObject, RootNode};
-    use graphql_relay_helpers::{RelayConnection, PageInfo};
+    use juniper_relay_helpers::{RelayConnection, PageInfo};
 
     // ---- Define the types ----
 

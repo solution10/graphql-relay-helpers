@@ -1,4 +1,4 @@
-# Relay GraphQL spec helpers
+# Juniper Relay GraphQL spec helpers
 
 [![⚒️ Build and test](https://github.com/solution10/graphql-relay-helpers/actions/workflows/branch-test.yml/badge.svg)](https://github.com/solution10/graphql-relay-helpers/actions/workflows/branch-test.yml)
 
@@ -16,4 +16,6 @@ The library is being actively developed - here's the WIP status:
 - [x] Add support for identifiers
 - [ ] Add support for `CursorProvider` to make generating cursors on Connections better.
 - [x] Add example Axum & Juniper application
+- [ ] Add cursor scalar serialization
+- [ ] rename crate
 - [ ] Publish crate

@@ -1,5 +1,5 @@
 use juniper::{EmptyMutation, EmptySubscription, FieldResult, RootNode};
-use graphql_relay_helpers::{OffsetCursor, PageInfo, RelayIdentifier};
+use juniper_relay_helpers::{OffsetCursor, PageInfo, RelayIdentifier};
 pub use crate::schema::character::{Character, CharacterRelayConnection, CharacterRelayEdge, CharacterRow};
 pub use crate::schema::identifiers::EntityType;
 pub use crate::schema::location::{Location, LocationRelayConnection, LocationRelayEdge, LocationRow};

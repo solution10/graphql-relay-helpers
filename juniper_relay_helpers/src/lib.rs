@@ -31,7 +31,7 @@
 //! SQL LIMIT and OFFSET.
 //!
 //! ```
-//! # use graphql_relay_helpers::{cursor_from_encoded_string, Cursor, OffsetCursor};
+//! # use juniper_relay_helpers::{cursor_from_encoded_string, Cursor, OffsetCursor};
 //! #
 //! # fn cursors() {
 //! let cursor = OffsetCursor { offset: 1, first: 10 };
@@ -70,7 +70,7 @@
 //! ```
 //! use std::fmt::{Display, Formatter};
 //! use std::str::FromStr;
-//! use graphql_relay_helpers::{RelayIdentifier};
+//! use juniper_relay_helpers::{RelayIdentifier};
 //! #
 //! use graphql_relay_helpers_codegen::IdentifierTypeDiscriminator;
 //!
@@ -105,8 +105,8 @@
 //!
 //! ```
 //! use juniper::GraphQLObject;
-//! # use graphql_relay_helpers_codegen::{RelayConnection};
-//! # use graphql_relay_helpers::PageInfo;
+//! # use juniper_relay_helpers_codegen::{RelayConnection};
+//! # use juniper_relay_helpers::PageInfo;
 //!
 //! #[derive(Debug, GraphQLObject, RelayConnection, Clone, Eq, PartialEq)]
 //! struct PlayableCharacter {
@@ -119,7 +119,7 @@
 //!
 //! ```rust
 //! # use juniper::GraphQLObject;
-//! # use graphql_relay_helpers::PageInfo;
+//! # use juniper_relay_helpers::PageInfo;
 //! #
 //! # #[derive(GraphQLObject)]
 //! # struct PlayableCharacter {
@@ -168,7 +168,7 @@ mod identifier;
 mod connections;
 
 // From other crates in the workspace:
-pub use graphql_relay_helpers_codegen::*;
+pub use juniper_relay_helpers_codegen::*;
 
 // From this crate:
 pub use pagination::*;
