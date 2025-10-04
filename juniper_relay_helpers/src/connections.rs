@@ -1,11 +1,11 @@
 #[cfg(test)]
 mod tests {
     use juniper::GraphQLObject;
-    use juniper_relay_helpers_codegen::RelayConnection;
-    use crate::PageInfo;
+    use juniper_relay_helpers_codegen::{RelayConnection};
+    use crate::{OffsetCursor, PageInfo, RelayEdge};
 
     #[derive(Debug, RelayConnection, GraphQLObject, Clone, Eq, PartialEq)]
-    struct User {
+    pub struct User {
         name: String,
     }
 
@@ -36,5 +36,20 @@ mod tests {
         };
         assert_eq!(edge.node.name, "Lune");
         assert_eq!(edge.cursor, Some("some-string".to_owned()));
+    }
+
+    #[test]
+    fn edge_implementation_new() {
+        let edge = UserRelayEdge::new(User {
+            name: "Lune".to_owned(),
+        }, OffsetCursor { offset: 0, first: 10 });
+        assert_eq!(edge.node.name, "Lune");
+        assert_eq!(edge.cursor, Some("b2Zmc2V0OjA6MTA=".into()));
+
+        let edge2 = UserRelayEdge::new_raw_cursor(User {
+            name: "Sciel".to_owned(),
+        }, Some("some-cursor".to_owned()));
+        assert_eq!(edge2.node.name, "Sciel");
+        assert_eq!(edge2.cursor, Some("some-cursor".into()));
     }
 }

@@ -1,5 +1,5 @@
 use juniper::{EmptyMutation, EmptySubscription, FieldResult, RootNode};
-use juniper_relay_helpers::{Cursor, OffsetCursor, PageInfo, RelayIdentifier};
+use juniper_relay_helpers::{Cursor, OffsetCursor, PageInfo, RelayIdentifier, RelayEdge};
 pub use crate::schema::character::{Character, CharacterRelayConnection, CharacterRelayEdge, CharacterRow};
 pub use crate::schema::identifiers::EntityType;
 pub use crate::schema::location::{Location, LocationRelayConnection, LocationRelayEdge, LocationRow};
@@ -31,15 +31,13 @@ impl QueryRoot {
         Ok(CharacterRelayConnection {
             count: ctx.characters.len() as i32,
             edges: ctx.characters.iter().enumerate().map(|(idx, row)| {
-                    CharacterRelayEdge {
-                        node: Character {
+                    CharacterRelayEdge::new(
+                        Character {
                             id: RelayIdentifier::new(row.id, EntityType::Character),
                             name: row.name.clone()
                         },
-                        cursor: Some(
-                            OffsetCursor { offset: idx as i32, first: 10 }.to_encoded_string()
-                        )
-                    }
+                        OffsetCursor { offset: idx as i32, first: 10 }
+                    )
                 }).collect()
             ,
             page_info: PageInfo {

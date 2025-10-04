@@ -27,7 +27,7 @@ pub fn macro_relay_connection_node(input: TokenStream) -> TokenStream {
                 pub struct #connection_name {
                     pub count: i32,
                     pub edges: Vec<#edge_name>,
-                    pub page_info: PageInfo,
+                    pub page_info: juniper_relay_helpers::PageInfo,
                 }
 
                 #[derive(juniper::GraphQLObject, Debug, Clone, Eq, PartialEq)]
@@ -38,6 +38,23 @@ pub fn macro_relay_connection_node(input: TokenStream) -> TokenStream {
                 pub struct #edge_name {
                     pub node: #struct_name,
                     pub cursor: Option<String>,
+                }
+
+                impl juniper_relay_helpers::RelayEdge for #edge_name {
+                    type NodeType = #struct_name;
+                    fn new(node: Self::NodeType, cursor: impl juniper_relay_helpers::Cursor) -> Self {
+                        Self {
+                            node: node,
+                            cursor: Some(cursor.to_encoded_string()),
+                        }
+                    }
+
+                    fn new_raw_cursor(node: Self::NodeType, cursor: Option<String>) -> Self {
+                        Self {
+                            node: node,
+                            cursor: cursor,
+                        }
+                    }
                 }
             }
         }
