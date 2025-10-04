@@ -180,3 +180,4 @@ pub use cursor_errors::*;
 pub use identifier::*;
 pub use connections::*;
 pub use edges::*;
+pub use cursor_provider::*;

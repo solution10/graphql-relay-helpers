@@ -17,6 +17,16 @@ pub struct Location {
     pub name: String,
 }
 
+/// Implement From to give a cleaner experience;
+impl From<LocationRow> for Location {
+    fn from(row: LocationRow) -> Self {
+        Location {
+            id: RelayIdentifier::new(row.id, EntityType::Location),
+            name: row.name
+        }
+    }   
+}
+
 // ----------- Test data ------------------
 
 pub fn get_location_test_data() -> Vec<LocationRow> {

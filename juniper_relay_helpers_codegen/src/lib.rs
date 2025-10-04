@@ -16,6 +16,7 @@ pub fn macro_relay_connection_node(input: TokenStream) -> TokenStream {
             let edge_gql_desc = format!("Edge type for {}.", input.ident);
             let connection_name = Ident::new(&format!("{}RelayConnection", input.ident), Span::mixed_site());
             let edge_name = Ident::new(&format!("{}RelayEdge", input.ident), Span::mixed_site());
+            let edge_trait_name = Ident::new(&format!("{}RelayEdgeTrait", input.ident), Span::mixed_site());
             let struct_name = input.ident;
 
             quote! {
@@ -28,6 +29,34 @@ pub fn macro_relay_connection_node(input: TokenStream) -> TokenStream {
                     pub count: i32,
                     pub edges: Vec<#edge_name>,
                     pub page_info: juniper_relay_helpers::PageInfo,
+                }
+
+                use juniper_relay_helpers::RelayEdge as #edge_trait_name;
+                impl juniper_relay_helpers::RelayConnection for #connection_name {
+                    type EdgeType = #edge_name;
+                    type NodeType = #struct_name;
+
+                    fn new(
+                        nodes: &Vec<#struct_name>,
+                        total_items: i32,
+                        cursor_provider: impl juniper_relay_helpers::CursorProvider,
+                        page_request: Option<juniper_relay_helpers::PageRequest>
+                    ) -> Self {
+                        let metadata = juniper_relay_helpers::PaginationMetadata {
+                            total_count: total_items,
+                            page_request
+                        };
+                        Self {
+                            count: total_items,
+                            edges: nodes.iter().enumerate().map(|(idx, node)| {
+                                #edge_name::new(
+                                    node.clone(),
+                                    cursor_provider.get_cursor_for_item(&metadata, idx as i32, node)
+                                )
+                            }).collect(),
+                            page_info: cursor_provider.get_page_info(&metadata, &nodes),
+                        }
+                    }
                 }
 
                 #[derive(juniper::GraphQLObject, Debug, Clone, Eq, PartialEq)]
