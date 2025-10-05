@@ -115,12 +115,22 @@ impl Cursor for OffsetCursor {
     }
 
     fn new(_raw: &str, parts: Vec<&str>) -> Result<OffsetCursor, CursorError> {
+        if parts.len() != 2 && parts.len() != 3 {
+            return Err(CursorError::InvalidCursor);
+        }
+
+        // Offset is always defined
         let offset = parts[1].parse::<i32>()
             .unwrap_or(0);
 
-        let first: Option<i32> = match parts[2].parse::<i32>() {
-            Ok(f) => Some(f),
-            Err(_) => None,
+        // First is optional and can be missing
+        let first: Option<i32> = if parts.len() == 2{
+            None
+        } else {
+            match parts[2].parse::<i32>() {
+                Ok(f) => Some(f),
+                Err(_) => None,
+            }
         };
 
         Ok(OffsetCursor { offset, first })

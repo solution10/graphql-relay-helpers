@@ -23,7 +23,7 @@ pub trait RelayConnection {
 mod tests {
     use juniper::GraphQLObject;
     use juniper_relay_helpers_codegen::{RelayConnection};
-    use crate::{OffsetCursor, PageInfo, RelayConnection as RelayConnectionTrait};
+    use crate::{OffsetCursor, PageInfo};
 
     #[derive(Debug, GraphQLObject, RelayConnection, Clone, Eq, PartialEq)]
     pub struct User {
