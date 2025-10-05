@@ -59,7 +59,7 @@
 //! `CursorProvider` is a trait that allows you to easily generate cursors for each of the items
 //! in the result set.
 //!
-//! todo().
+//! For a reference implementation, see the `OffsetCursorProvider` struct.
 //!
 //! # Identifiers
 //!
@@ -156,6 +156,24 @@
 //! 	cursor: String!
 //! 	node: PlayableCharacter!
 //! }
+//! ```
+//!
+//! ## IdentifierTypeDiscriminator
+//!
+//! To be able to use an `enum` as your identifier discriminator, you need to implement a couple of traits.
+//! Or, the easier path, just add the `IdentifierTypeDiscriminator` derive macro:
+//!
+//! ```
+//! use juniper_relay_helpers::{IdentifierTypeDiscriminator, RelayIdentifier};
+//!
+//! #[derive(IdentifierTypeDiscriminator)]
+//! enum MyEntityTypes {
+//!     CHARACTER,
+//!     ENEMY
+//! }
+//!
+//! // This can now be used in RelayIdentifier:
+//! let id = RelayIdentifier::new("123".to_string(), MyEntityTypes::CHARACTER);
 //! ```
 //!
 //!

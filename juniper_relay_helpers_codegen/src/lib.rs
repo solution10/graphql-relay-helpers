@@ -135,15 +135,15 @@ pub fn macro_type_discriminator(input: TokenStream) -> TokenStream {
             });
 
             quote! {
-                impl Display for #enum_name {
-                    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+                impl std::fmt::Display for #enum_name {
+                    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                         match self {
                             #(#enum_display_variants),*
                         }
                     }
                 }
 
-                impl FromStr for #enum_name {
+                impl std::str::FromStr for #enum_name {
                     type Err = &'static str;
                     fn from_str(s: &str) -> Result<Self, Self::Err> {
                         match s {

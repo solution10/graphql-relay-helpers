@@ -29,7 +29,7 @@ impl QueryRoot {
     /// Queries for all characters in the "database"
     /// This method shows how you can manually build up the resulting structs without using
     /// cursor providers or any of the other fancy stuff.
-    async fn characters(first: Option<i32>, after: Option<OffsetCursor>, ctx: &Context) -> FieldResult<CharacterRelayConnection> {
+    async fn characters(ctx: &Context) -> FieldResult<CharacterRelayConnection> {
         Ok(CharacterRelayConnection {
             count: ctx.characters.len() as i32,
             edges: ctx.characters.iter().enumerate().map(|(idx, row)| {

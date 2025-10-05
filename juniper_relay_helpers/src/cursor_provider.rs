@@ -113,6 +113,8 @@ impl CursorProvider for OffsetCursorProvider {
 }
 
 impl OffsetCursorProvider {
+    /// Shortcut method for creating a new instance of OffsetCursorProvider. May be used in the future
+    /// if we need to pass things into it.
     pub fn new() -> Self {
         OffsetCursorProvider
     }

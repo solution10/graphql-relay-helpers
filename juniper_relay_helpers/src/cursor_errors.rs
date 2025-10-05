@@ -2,7 +2,10 @@ use std::string::FromUtf8Error;
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum CursorError {
+    /// Returned when the cursor is invalid - wrong number of segments, mismatch of types, etc.
     InvalidCursor,
+
+    /// Returned when the base64 encoding on the cursor is invalid.
     InvalidCursorEncoding,
 }
 
