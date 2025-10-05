@@ -153,8 +153,8 @@
 //! }
 //!
 //! type PlayableCharacterEdge {
-//! 	cursor: String!
-//! 	node: PlayableCharacter!
+//!     cursor: String!
+//!     node: PlayableCharacter!
 //! }
 //! ```
 //!

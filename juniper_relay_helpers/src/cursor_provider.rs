@@ -29,7 +29,7 @@ pub trait CursorProvider {
     ) -> impl Cursor;
 
     /// Builds the `PageInfo` to return to the RelayConnection
-    fn get_page_info<T>(&self, metadata: &PaginationMetadata, items: &Vec<T>) -> PageInfo;
+    fn get_page_info<T>(&self, metadata: &PaginationMetadata, items: &[T]) -> PageInfo;
 }
 
 
@@ -65,7 +65,7 @@ impl CursorProvider for OffsetCursorProvider {
         }
     }
 
-    fn get_page_info<T>(&self, metadata: &PaginationMetadata, items: &Vec<T>) -> PageInfo {
+    fn get_page_info<T>(&self, metadata: &PaginationMetadata, items: &[T]) -> PageInfo {
         let default_cursor = OffsetCursor::default();
         let current_cursor = match &metadata.page_request {
             Some(pr) => match pr.parsed_cursor() {
@@ -92,7 +92,7 @@ impl CursorProvider for OffsetCursorProvider {
         PageInfo {
             has_prev_page: current_cursor.offset > 0,
             has_next_page,
-            start_cursor: if items.len() > 0 {
+            start_cursor: if !items.is_empty() {
                 Some(
                     self.get_cursor_for_item(metadata, 0, &items[0])
                         .to_encoded_string()
@@ -100,7 +100,7 @@ impl CursorProvider for OffsetCursorProvider {
             } else {
                 None
             },
-            end_cursor: if items.len() > 0 {
+            end_cursor: if !items.is_empty() {
                 Some(
                     self.get_cursor_for_item(metadata, last_index as i32, &items[last_index])
                         .to_encoded_string()
@@ -109,6 +109,12 @@ impl CursorProvider for OffsetCursorProvider {
                 None
             },
         }
+    }
+}
+
+impl Default for OffsetCursorProvider {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -128,6 +134,7 @@ mod tests {
 
         #[derive(Debug, Clone)]
         struct Location {
+            #[allow(dead_code)]
             name: String
         }
 
@@ -148,8 +155,8 @@ mod tests {
                 page_request: None
             }, &data());
 
-            assert_eq!(pi.has_prev_page, false);
-            assert_eq!(pi.has_next_page, false);
+            assert!(!pi.has_prev_page);
+            assert!(!pi.has_next_page);
             assert_eq!(pi.start_cursor, Some(OffsetCursor { offset: 0, first: None }.to_encoded_string()));
             assert_eq!(pi.end_cursor, Some(OffsetCursor { offset: 1, first: None }.to_encoded_string()));
         }
@@ -165,8 +172,8 @@ mod tests {
                 page_request: None
             }, &data());
 
-            assert_eq!(pi.has_prev_page, false);
-            assert_eq!(pi.has_next_page, false);
+            assert!(!pi.has_prev_page);
+            assert!(!pi.has_next_page);
             assert_eq!(pi.start_cursor, Some(OffsetCursor { offset: 0, first: None }.to_encoded_string()));
             assert_eq!(pi.end_cursor, Some(OffsetCursor { offset: 1, first: None }.to_encoded_string()));
         }
@@ -185,8 +192,8 @@ mod tests {
                 )
             }, &data());
 
-            assert_eq!(pi.has_prev_page, false);
-            assert_eq!(pi.has_next_page, true);
+            assert!(!pi.has_prev_page);
+            assert!(pi.has_next_page);
             assert_eq!(pi.start_cursor, Some(OffsetCursor { offset: 0, first: None }.to_encoded_string()));
             assert_eq!(pi.end_cursor, Some(OffsetCursor { offset: 1, first: None }.to_encoded_string()));
         }
@@ -213,8 +220,8 @@ mod tests {
                     }
                 )
             }, &data);
-            assert_eq!(pi1.has_prev_page, false);
-            assert_eq!(pi1.has_next_page, true);
+            assert!(!pi1.has_prev_page);
+            assert!(pi1.has_next_page);
             assert_eq!(pi1.start_cursor, Some(OffsetCursor { offset: 0, first: None }.to_encoded_string()));
             assert_eq!(pi1.end_cursor, Some(OffsetCursor { offset: 4, first: None }.to_encoded_string()));
 
@@ -227,8 +234,8 @@ mod tests {
                     }
                 )
             }, &data);
-            assert_eq!(pi2.has_prev_page, true);
-            assert_eq!(pi2.has_next_page, true);
+            assert!(pi2.has_prev_page);
+            assert!(pi2.has_next_page);
             assert_eq!(pi2.start_cursor, Some(OffsetCursor { offset: 5, first: None }.to_encoded_string()));
             assert_eq!(pi2.end_cursor, Some(OffsetCursor { offset: 9, first: None }.to_encoded_string()));
 
@@ -240,9 +247,9 @@ mod tests {
                         after: pi2.end_cursor.clone()
                     }
                 )
-            }, &vec![data[0].clone(), data[1].clone(), data[2].clone()]);
-            assert_eq!(pi3.has_prev_page, true);
-            assert_eq!(pi3.has_next_page, false);
+            }, &[data[0].clone(), data[1].clone(), data[2].clone()]);
+            assert!(pi3.has_prev_page);
+            assert!(!pi3.has_next_page);
             assert_eq!(pi3.start_cursor, Some(OffsetCursor { offset: 10, first: None }.to_encoded_string()));
             assert_eq!(pi3.end_cursor, Some(OffsetCursor { offset: 12, first: None }.to_encoded_string()));
         }

@@ -61,11 +61,7 @@ impl PageRequest {
     pub fn new(first: Option<i32>, after: Option<impl Cursor>) -> Self {
         PageRequest {
             first,
-            after: if let Some(after) = after {
-                Some(after.to_encoded_string())
-            } else {
-                None
-            }
+            after: after.map(|after| after.to_encoded_string())
         }
     }
 

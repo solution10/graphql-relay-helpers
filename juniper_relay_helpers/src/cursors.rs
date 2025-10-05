@@ -95,6 +95,7 @@ pub fn cursor_from_encoded_string<T>(input: &str) -> Result<T, CursorError> wher
     to_output_with = Self::to_output,
     from_input_with = Self::from_input
 )]
+#[derive(Default)]
 pub struct OffsetCursor {
     /// The offset of the cursor (how many items to skip).
     pub offset: i32,
@@ -127,10 +128,7 @@ impl Cursor for OffsetCursor {
         let first: Option<i32> = if parts.len() == 2{
             None
         } else {
-            match parts[2].parse::<i32>() {
-                Ok(f) => Some(f),
-                Err(_) => None,
-            }
+            parts[2].parse::<i32>().ok()
         };
 
         Ok(OffsetCursor { offset, first })
@@ -143,11 +141,6 @@ impl Display for OffsetCursor {
     }
 }
 
-impl Default for OffsetCursor {
-    fn default() -> Self {
-        OffsetCursor { offset: 0, first: None }
-    }
-}
 
 /// Built-in cursor type for when the cursor is just a string. Usually useful for things like
 /// NoSQL systems that return something opaque to you.

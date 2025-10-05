@@ -12,7 +12,7 @@ pub trait RelayConnection {
     /// Builds a connection and associated edges from a Vec of the Nodes themselves. Pagination cursors
     /// can also be generated for you by providing the page info and CursorProvider trait instance.
     fn new(
-        nodes: &Vec<Self::NodeType>,
+        nodes: &[Self::NodeType],
         total_items: i32,
         cursor_provider: impl CursorProvider,
         page_request: Option<crate::PageRequest>
@@ -46,18 +46,6 @@ mod tests {
         assert_eq!(conn.count, 12);
         assert_eq!(conn.edges.len(), 0);
     }
-
-    // #[test]
-    // fn connection_new_generated() {
-    //     let conn = UserRelayConnection::new(
-    //         vec![
-    //             User { name: "Lune".to_owned() },
-    //         ],
-    //         127,
-    //         todo!(),
-    //         None
-    //     );
-    // }
 
     #[test]
     fn edge_types_are_generated() {

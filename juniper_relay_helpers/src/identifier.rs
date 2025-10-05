@@ -76,8 +76,6 @@ impl<T, TD> RelayIdentifier<T, TD> where T: Display, T: FromStr, TD: Display, TD
 
 #[cfg(test)]
 mod tests {
-    use std::fmt::{Display, Formatter};
-    use std::str::FromStr;
     use base64::Engine;
     use base64::prelude::BASE64_URL_SAFE;
     use uuid::Uuid;
@@ -158,7 +156,7 @@ mod tests {
 
     #[test]
     fn test_invalid_identifier_format() {
-        let input = BASE64_URL_SAFE.encode("character//123".to_string());
+        let input = BASE64_URL_SAFE.encode("character//123");
         let result = RelayIdentifier::<String, TestTypeDiscriminator>::from_input(&input);
         assert!(result.is_err());
         assert_eq!(result.unwrap_err().to_string(), "Invalid Relay identifier");

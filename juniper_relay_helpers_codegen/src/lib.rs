@@ -37,7 +37,7 @@ pub fn macro_relay_connection_node(input: TokenStream) -> TokenStream {
                     type NodeType = #struct_name;
 
                     fn new(
-                        nodes: &Vec<#struct_name>,
+                        nodes: &[#struct_name],
                         total_items: i32,
                         cursor_provider: impl juniper_relay_helpers::CursorProvider,
                         page_request: Option<juniper_relay_helpers::PageRequest>

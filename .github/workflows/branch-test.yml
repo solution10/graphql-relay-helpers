@@ -30,6 +30,9 @@ jobs:
       - name: Build
         run: make build-dev
 
+      - name: Lint
+        run: make lint
+
       - name: Unit Tests
         run: make test-unit
 
