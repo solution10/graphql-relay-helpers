@@ -59,7 +59,7 @@
 //! `CursorProvider` is a trait that allows you to easily generate cursors for each of the items
 //! in the result set.
 //!
-//! todo().
+//! For a reference implementation, see the `OffsetCursorProvider` struct.
 //!
 //! # Identifiers
 //!
@@ -153,12 +153,32 @@
 //! }
 //!
 //! type PlayableCharacterEdge {
-//! 	cursor: String!
-//! 	node: PlayableCharacter!
+//!     cursor: String!
+//!     node: PlayableCharacter!
 //! }
 //! ```
 //!
+//! ## IdentifierTypeDiscriminator
 //!
+//! To be able to use an `enum` as your identifier discriminator, you need to implement a couple of traits.
+//! Or, the easier path, just add the `IdentifierTypeDiscriminator` derive macro:
+//!
+//! ```
+//! use juniper_relay_helpers::{IdentifierTypeDiscriminator, RelayIdentifier};
+//!
+//! #[derive(IdentifierTypeDiscriminator)]
+//! enum MyEntityTypes {
+//!     CHARACTER,
+//!     ENEMY
+//! }
+//!
+//! // This can now be used in RelayIdentifier:
+//! let id = RelayIdentifier::new("123".to_string(), MyEntityTypes::CHARACTER);
+//! ```
+//!
+//!
+
+extern crate self as juniper_relay_helpers;
 
 mod pagination;
 mod cursors;
@@ -166,12 +186,16 @@ mod cursor_errors;
 mod cursor_provider;
 mod identifier;
 mod connections;
+mod edges;
 
 // From other crates in the workspace:
-pub use juniper_relay_helpers_codegen::*;
+pub use juniper_relay_helpers_codegen::{RelayConnection, IdentifierTypeDiscriminator};
 
 // From this crate:
 pub use pagination::*;
 pub use cursors::*;
 pub use cursor_errors::*;
 pub use identifier::*;
+pub use connections::*;
+pub use edges::*;
+pub use cursor_provider::*;

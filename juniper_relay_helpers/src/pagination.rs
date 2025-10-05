@@ -49,14 +49,22 @@ pub struct PageInfo {
 pub struct PageRequest {
     /// The number of items to return.
     #[graphql(description = "The number of items to return.")]
-    first: Option<i32>,
+    pub first: Option<i32>,
 
     /// A cursor to use as the pointer to the start of the page.
     #[graphql(description = "A cursor to use as the pointer to the start of the page.")]
-    after: Option<String>,
+    pub after: Option<String>,
 }
 
 impl PageRequest {
+    /// Helper method to build from the component parts from a query resolver
+    pub fn new(first: Option<i32>, after: Option<impl Cursor>) -> Self {
+        PageRequest {
+            first,
+            after: after.map(|after| after.to_encoded_string())
+        }
+    }
+
     /// Parses the `after` portion of the PageRequest into the appropriate cursor type.
     /// Will return `None` if the `Option` is empty, and returns wrapped in a `Result` in case the
     /// decoding of the cursor fails.
@@ -72,7 +80,14 @@ impl PageRequest {
 
 #[cfg(test)]
 mod tests {
-    use crate::{OffsetCursor, PageRequest};
+    use crate::{OffsetCursor, PageRequest, StringCursor};
+
+    #[test]
+    fn test_new() {
+        let pr = PageRequest::new(Some(10), Some(StringCursor::new("some-string-cursor".to_string())));
+        assert_eq!(pr.first, Some(10));
+        assert_eq!(pr.after, Some("c3RyaW5nOnNvbWUtc3RyaW5nLWN1cnNvcg==".to_string()));
+    }
 
     #[test]
     fn test_decoding_cursor_from_page_request() {
