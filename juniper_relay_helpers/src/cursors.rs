@@ -154,7 +154,13 @@ impl Default for OffsetCursor {
 #[derive(Debug, GraphQLScalar)]
 pub struct StringCursor {
     /// The value of the cursor.
-    value: String,
+    pub value: String,
+}
+
+impl StringCursor {
+    pub fn new(value: String) -> Self {
+        StringCursor { value }
+    }
 }
 
 impl Cursor for StringCursor {

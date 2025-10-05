@@ -57,6 +57,18 @@ pub struct PageRequest {
 }
 
 impl PageRequest {
+    /// Helper method to build from the component parts from a query resolver
+    pub fn new(first: Option<i32>, after: Option<impl Cursor>) -> Self {
+        PageRequest {
+            first,
+            after: if let Some(after) = after {
+                Some(after.to_encoded_string())
+            } else {
+                None
+            }
+        }
+    }
+
     /// Parses the `after` portion of the PageRequest into the appropriate cursor type.
     /// Will return `None` if the `Option` is empty, and returns wrapped in a `Result` in case the
     /// decoding of the cursor fails.
@@ -72,7 +84,14 @@ impl PageRequest {
 
 #[cfg(test)]
 mod tests {
-    use crate::{OffsetCursor, PageRequest};
+    use crate::{OffsetCursor, PageRequest, StringCursor};
+
+    #[test]
+    fn test_new() {
+        let pr = PageRequest::new(Some(10), Some(StringCursor::new("some-string-cursor".to_string())));
+        assert_eq!(pr.first, Some(10));
+        assert_eq!(pr.after, Some("c3RyaW5nOnNvbWUtc3RyaW5nLWN1cnNvcg==".to_string()));
+    }
 
     #[test]
     fn test_decoding_cursor_from_page_request() {

@@ -83,7 +83,7 @@ impl CursorProvider for OffsetCursorProvider {
                 false
             }
         } else {
-            // We didn't request a first, which means entire result set, therefore no next page
+            // We didn't request a first, which means the entire result set, therefore no next page
             false
         };
 
@@ -244,27 +244,6 @@ mod tests {
             assert_eq!(pi3.start_cursor, Some(OffsetCursor { offset: 10, first: None }.to_encoded_string()));
             assert_eq!(pi3.end_cursor, Some(OffsetCursor { offset: 12, first: None }.to_encoded_string()));
         }
-
-       //  /// Mimics a subsequent page request - there's an `after` and a `first`
-         // /// TODO: I think this is actually an off-by-one error :yikes:
-        // #[test]
-        // fn test_page_info_has_request_subsequent_page() {
-        //     let p = OffsetCursorProvider::new();
-        //     let pi = p.get_page_info(&PaginationMetadata {
-        //         total_count: 27,
-        //         page_request: Some(
-        //             PageRequest {
-        //                 first: Some(10),
-        //                 after: Some(OffsetCursor { offset: 9, first: Some(10) }.to_encoded_string())
-        //             }
-        //         )
-        //     }, &data());
-        //
-        //     assert_eq!(pi.has_prev_page, true);
-        //     assert_eq!(pi.has_next_page, true);
-        //     assert_eq!(pi.start_cursor, Some(OffsetCursor { offset: 9, first: Some(10) }.to_encoded_string()));
-        //     assert_eq!(pi.end_cursor, Some(OffsetCursor { offset: 10, first: Some(10) }.to_encoded_string()));
-        // }
     }
 }
 

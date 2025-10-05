@@ -1,5 +1,5 @@
 use juniper::{EmptyMutation, EmptySubscription, FieldResult, RootNode};
-use juniper_relay_helpers::{OffsetCursor, PageInfo, RelayIdentifier, RelayEdge, RelayConnection, OffsetCursorProvider};
+use juniper_relay_helpers::{OffsetCursor, PageInfo, RelayIdentifier, RelayEdge, RelayConnection, OffsetCursorProvider, PageRequest};
 pub use crate::schema::character::{Character, CharacterRelayConnection, CharacterRelayEdge, CharacterRow};
 pub use crate::schema::identifiers::EntityType;
 pub use crate::schema::location::{Location, LocationRelayConnection, LocationRow};
@@ -29,7 +29,7 @@ impl QueryRoot {
     /// Queries for all characters in the "database"
     /// This method shows how you can manually build up the resulting structs without using
     /// cursor providers or any of the other fancy stuff.
-    async fn characters(ctx: &Context) -> FieldResult<CharacterRelayConnection> {
+    async fn characters(first: Option<i32>, after: Option<OffsetCursor>, ctx: &Context) -> FieldResult<CharacterRelayConnection> {
         Ok(CharacterRelayConnection {
             count: ctx.characters.len() as i32,
             edges: ctx.characters.iter().enumerate().map(|(idx, row)| {
@@ -54,17 +54,26 @@ impl QueryRoot {
     /// Queries for all locations in the "database"
     /// This method makes use of cursor providers and the shortcut methods to show how much you can
     /// hand off to the library:
-    async fn locations(ctx: &Context) -> FieldResult<LocationRelayConnection> {
-        let nodes = ctx.locations.iter().map(|row| {
-            Location::from(row.clone())
-        }).collect::<Vec<Location>>();
+    async fn locations(first: Option<i32>, after: Option<OffsetCursor>, ctx: &Context) -> FieldResult<LocationRelayConnection> {
+        let mut nodes = ctx.locations
+            .iter()
+            .map(|row| Location::from(row.clone()))
+            .collect::<Vec<Location>>();
+
+        if let Some(after) = &after {
+            nodes = nodes.split_off(after.offset as usize + 1);
+        }
+
+        if let Some(first) = first {
+            nodes.truncate(first as usize);
+        }
 
         Ok(
             LocationRelayConnection::new(
                 &nodes,
                 ctx.locations.len() as i32,
                 OffsetCursorProvider::new(),
-                None
+                Some(PageRequest::new(first, after))
             )
         )
     }
