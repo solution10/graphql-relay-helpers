@@ -30,6 +30,8 @@ jobs:
       - name: Publish
         run: >
           cargo publish
+          -p juniper_relay_helpers
+          -p juniper_relay_helpers_codegen
           --verbose
           --no-verify
           --token ${{ secrets.CARGO_REGISTRY_TOKEN }}
