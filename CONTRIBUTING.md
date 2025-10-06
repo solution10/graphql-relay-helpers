@@ -16,10 +16,13 @@ Want to fix a bug or add a feature? Please submit a pull request!
 We reserve the right to reject pull requests that don't meet our standards, or veer away from the project's goals, or
 potentially increase the scope beyond a reasonable level of effort to maintain.
 
-If you're unsure about whether a feature would be a good fit - please use the Discussions or Issue tracker to discuss it
+If you're unsure about whether a feature would be a good fit; please use the Discussions or Issue tracker to discuss it
 to save you wasting effort.
 
-Forks are also welcome and encouraged - it's open source, be open! Please try to contribute back if you can though.
+Forks are also welcome and encouraged; it's open source, be open! Please try to contribute back if you can though.
+
+We use the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) style of commit message to automate
+versioning and release notes. Please follow that convention.
 
 ### Ask questions in Discussions
 
