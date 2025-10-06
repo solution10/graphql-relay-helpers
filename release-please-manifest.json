@@ -1,9 +1,0 @@
-{
-  "packages": {
-    "juniper_relay_helpers": {},
-    "juniper_relay_helpers_codegen": {},
-    "juniper_relay_helpers_test": {}
-  },
-  "plugins": ["cargo-workspace"],
-  "release-type": "rust"
-}
