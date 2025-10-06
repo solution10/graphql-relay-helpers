@@ -1,0 +1,19 @@
+{
+  "packages": {
+    "juniper_relay_helpers": {},
+    "juniper_relay_helpers_codegen": {},
+    "juniper_relay_helpers_test": {}
+  },
+  "plugins": ["cargo-workspace"],
+  "release-type": "rust",
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": true,
+  "pull-request-title-pattern": "chore: release ${version}",
+  "changelog-sections": [
+    {"type": "feat", "section": "Features"},
+    {"type": "fix", "section": "Bug Fixes"},
+    {"type": "perf", "section": "Performance Improvements"},
+    {"type": "deps", "section": "Dependencies"},
+    {"type": "chore", "section": "Miscellaneous"}
+  ]
+}
