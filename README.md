@@ -14,7 +14,7 @@ Crate providing helpers for implementing the [Relay GraphQL spec](https://relay.
 
 Here's a super quick taster of what this crate can do for you!
 
-(These examples are illustrative; see the [Example App](#example-app) and [Documentation](https://docs.rs) for the real deal).
+(These examples are illustrative; see the [Example App](#example-app) and [Documentation](https://docs.rs/juniper_relay_helpers) for the real deal).
 
 ```rust
 use juniper_relay_helpers::{RelayConnection};
