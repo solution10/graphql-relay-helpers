@@ -3,7 +3,6 @@
     "juniper_relay_helpers": {},
     "juniper_relay_helpers_codegen": {}
   },
-  "separate-pull-requests": true,
   "pull-request-title-pattern": "chore: release ${component} ${version}",
   "plugins": ["cargo-workspace"],
   "release-type": "rust",
