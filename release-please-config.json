@@ -3,11 +3,12 @@
     "juniper_relay_helpers": {},
     "juniper_relay_helpers_codegen": {}
   },
+  "separate-pull-requests": true,
+  "pull-request-title-pattern": "chore: release ${component} ${version}",
   "plugins": ["cargo-workspace"],
   "release-type": "rust",
   "bump-minor-pre-major": true,
   "bump-patch-for-minor-pre-major": true,
-  "group-pull-request-title-pattern": "chore: release ${version}",
   "changelog-sections": [
     {"type": "feat", "section": "Features"},
     {"type": "fix", "section": "Bug Fixes"},
