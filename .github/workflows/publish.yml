@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - '**'
+      - 'juniper_relay_helpers-v**'
 
 jobs:
   build_and_test:
