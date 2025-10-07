@@ -1,6 +1,8 @@
 # Juniper Relay GraphQL spec helpers
 
 [![⚒️ Build and test](https://github.com/solution10/graphql-relay-helpers/actions/workflows/branch-test.yml/badge.svg)](https://github.com/solution10/graphql-relay-helpers/actions/workflows/branch-test.yml)
+[![crates.io](https://img.shields.io/crates/v/juniper_relay_helpers)](https://crates.io/crates/juniper_relay_helpers)
+[![docs.rs](https://docs.rs/juniper_relay_helpers/badge.svg)](https://docs.rs/juniper_relay_helpers)
 
 Crate providing helpers for implementing the [Relay GraphQL spec](https://relay.dev/docs/guides/graphql-server-specification/).
 
