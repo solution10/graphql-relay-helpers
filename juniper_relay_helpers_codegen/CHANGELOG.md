@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/solution10/juniper-relay-helpers/compare/juniper_relay_helpers_codegen-v0.1.0...juniper_relay_helpers_codegen-v0.1.1) (2025-10-07)
+
+
+### Bug Fixes
+
+* adjust documentation links and release process ([#8](https://github.com/solution10/juniper-relay-helpers/issues/8)) ([61997c8](https://github.com/solution10/juniper-relay-helpers/commit/61997c8bad1c4ce058670b165f4b63b88c3e2ace))
+
 ## 0.1.0 (2025-10-06)
 
 
