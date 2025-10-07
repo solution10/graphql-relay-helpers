@@ -8,8 +8,8 @@ authors = [
     "Alex Gisby <alex@solution10.com>"
 ]
 documentation = "https://docs.rs/juniper_relay_helpers"
-homepage = "https://github.com/solution10/juniper_relay_helpers"
-repository = "https://github.com/solution10/juniper_relay_helpers"
+homepage = "https://github.com/solution10/juniper-relay-helpers"
+repository = "https://github.com/solution10/juniper-relay-helpers"
 readme = "../README.md"
 categories = ["web-programming", "web-programming::http-server"]
 keywords = ["macro"]
