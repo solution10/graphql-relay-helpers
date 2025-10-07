@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.2](https://github.com/solution10/juniper-relay-helpers/compare/juniper_relay_helpers-v0.1.1...juniper_relay_helpers-v0.1.2) (2025-10-07)
+
+
+### Bug Fixes
+
+* repo links in Cargo ([ae13d60](https://github.com/solution10/juniper-relay-helpers/commit/ae13d60490005aae5af430ecaaf25d3dcdd1a8ab))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * juniper_relay_helpers_codegen bumped from 0.1.1 to 0.1.2
+
 ## [0.1.1](https://github.com/solution10/juniper-relay-helpers/compare/juniper_relay_helpers-v0.1.0...juniper_relay_helpers-v0.1.1) (2025-10-07)
 
 
