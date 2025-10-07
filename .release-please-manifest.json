@@ -1,4 +1,5 @@
 {
   "juniper_relay_helpers": "0.1.0",
-  "juniper_relay_helpers_codegen": "0.1.0"
+  "juniper_relay_helpers_codegen": "0.1.0",
+  "juniper_relay_helpers_test": "0.1.1"
 }
