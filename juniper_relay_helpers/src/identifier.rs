@@ -1,7 +1,7 @@
-use std::fmt::Display;
-use std::str::FromStr;
 use base64::prelude::*;
 use juniper::{GraphQLScalar, ParseScalarResult, ParseScalarValue, ScalarToken, ScalarValue};
+use std::fmt::Display;
+use std::str::FromStr;
 
 const SEGMENT_DELIMITER: &str = "::";
 
@@ -17,23 +17,48 @@ const SEGMENT_DELIMITER: &str = "::";
     from_input_with = Self::from_input,
     parse_token_with = Self::parse_token
 )]
-pub struct RelayIdentifier<T, TD> where T: Display, T: FromStr, TD: Display, TD: FromStr {
+pub struct RelayIdentifier<T, TD>
+where
+    T: Display,
+    T: FromStr,
+    TD: Display,
+    TD: FromStr,
+{
     pub id: T,
     pub type_discriminator: TD,
 }
 
 /// Implement Display
-impl<T, TD> Display for RelayIdentifier<T, TD> where T: Display, T: FromStr, TD: Display, TD: FromStr {
+impl<T, TD> Display for RelayIdentifier<T, TD>
+where
+    T: Display,
+    T: FromStr,
+    TD: Display,
+    TD: FromStr,
+{
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}{}{}", self.type_discriminator, SEGMENT_DELIMITER, self.id)
+        write!(
+            f,
+            "{}{}{}",
+            self.type_discriminator, SEGMENT_DELIMITER, self.id
+        )
     }
 }
 
 /// Common implementation for all identifiers
-impl<T, TD> RelayIdentifier<T, TD> where T: Display, T: FromStr, TD: Display, TD: FromStr {
+impl<T, TD> RelayIdentifier<T, TD>
+where
+    T: Display,
+    T: FromStr,
+    TD: Display,
+    TD: FromStr,
+{
     /// General constructor
     pub fn new(id: T, type_delimiter: TD) -> Self {
-        Self { id, type_discriminator: type_delimiter }
+        Self {
+            id,
+            type_discriminator: type_delimiter,
+        }
     }
 
     pub fn to_encoded_string(&self) -> String {
@@ -48,23 +73,24 @@ impl<T, TD> RelayIdentifier<T, TD> where T: Display, T: FromStr, TD: Display, TD
 
     pub fn from_input(input: &str) -> Result<Self, Box<str>> {
         // Input is a base64 encoded string, so we need to decode it first
-        let decoded_bytes = BASE64_URL_SAFE.decode(input)
+        let decoded_bytes = BASE64_URL_SAFE
+            .decode(input)
             .map_err(|err| format!("Invalid base64 encoding: {}", err))?;
 
         let decoded_string = String::from_utf8(decoded_bytes)
             .map_err(|err| format!("Invalid UTF-8 encoding: {}", err))?;
 
-        let parts = decoded_string.split(SEGMENT_DELIMITER).collect::<Vec<&str>>();
+        let parts = decoded_string
+            .split(SEGMENT_DELIMITER)
+            .collect::<Vec<&str>>();
 
         if parts.len() != 2 {
             return Err("Invalid Relay identifier".into());
         }
 
-        let identifier_part = T::from_str(parts[1])
-            .map_err(|_| "Invalid identifier")?;
+        let identifier_part = T::from_str(parts[1]).map_err(|_| "Invalid identifier")?;
 
-        let type_delimiter_part = TD::from_str(parts[0])
-            .map_err(|_| "Invalid type delimiter")?;
+        let type_delimiter_part = TD::from_str(parts[0]).map_err(|_| "Invalid type delimiter")?;
 
         Ok(Self::new(identifier_part, type_delimiter_part))
     }
@@ -76,21 +102,24 @@ impl<T, TD> RelayIdentifier<T, TD> where T: Display, T: FromStr, TD: Display, TD
 
 #[cfg(test)]
 mod tests {
+    use crate::identifier::RelayIdentifier;
     use base64::Engine;
     use base64::prelude::BASE64_URL_SAFE;
+    use juniper_relay_helpers_codegen::IdentifierTypeDiscriminator;
     use uuid::Uuid;
-    use juniper_relay_helpers_codegen::{IdentifierTypeDiscriminator};
-    use crate::identifier::RelayIdentifier;
 
     #[derive(IdentifierTypeDiscriminator, PartialEq, Eq, Debug)]
     enum TestTypeDiscriminator {
         Character,
-        Weapon
+        Weapon,
     }
 
     #[test]
     fn test_string_identifiers() {
-        let id = RelayIdentifier { id: "123".to_string(), type_discriminator: TestTypeDiscriminator::Character };
+        let id = RelayIdentifier {
+            id: "123".to_string(),
+            type_discriminator: TestTypeDiscriminator::Character,
+        };
         assert_eq!(id.to_string(), "character::123");
     }
 
@@ -117,9 +146,13 @@ mod tests {
     #[test]
     fn test_from_input_string() {
         let input = "Y2hhcmFjdGVyOjoxMjM=";
-        let identifier = RelayIdentifier::<String, TestTypeDiscriminator>::from_input(input).unwrap();
+        let identifier =
+            RelayIdentifier::<String, TestTypeDiscriminator>::from_input(input).unwrap();
         assert_eq!(identifier.id, "123");
-        assert_eq!(identifier.type_discriminator, TestTypeDiscriminator::Character);
+        assert_eq!(
+            identifier.type_discriminator,
+            TestTypeDiscriminator::Character
+        );
     }
 
     #[test]
@@ -134,8 +167,14 @@ mod tests {
     fn test_from_input_uuid() {
         let input = "Y2hhcmFjdGVyOjo3Mzk2YWEyZi0wM2RmLTQyZDYtYWFlMS1jZjBlOTE4MmYwZDI=";
         let identifier = RelayIdentifier::<Uuid, TestTypeDiscriminator>::from_input(input).unwrap();
-        assert_eq!(identifier.id, Uuid::parse_str("7396aa2f-03df-42d6-aae1-cf0e9182f0d2").unwrap());
-        assert_eq!(identifier.type_discriminator, TestTypeDiscriminator::Character);
+        assert_eq!(
+            identifier.id,
+            Uuid::parse_str("7396aa2f-03df-42d6-aae1-cf0e9182f0d2").unwrap()
+        );
+        assert_eq!(
+            identifier.type_discriminator,
+            TestTypeDiscriminator::Character
+        );
     }
 
     #[test]
@@ -143,7 +182,10 @@ mod tests {
         let input = "Y2hhcmFjdGVyOjo3Mzk2YWEyZi0wM2RmLTQyZDYtYWFlMS1jZjBlOTE4MmYwZDI";
         let result = RelayIdentifier::<Uuid, TestTypeDiscriminator>::from_input(input);
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err().to_string(), "Invalid base64 encoding: Invalid padding");
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "Invalid base64 encoding: Invalid padding"
+        );
     }
 
     #[test]
@@ -151,7 +193,10 @@ mod tests {
         let input = BASE64_URL_SAFE.encode(vec![0x80]);
         let result = RelayIdentifier::<Uuid, TestTypeDiscriminator>::from_input(&input);
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err().to_string(), "Invalid UTF-8 encoding: invalid utf-8 sequence of 1 bytes from index 0");
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "Invalid UTF-8 encoding: invalid utf-8 sequence of 1 bytes from index 0"
+        );
     }
 
     #[test]

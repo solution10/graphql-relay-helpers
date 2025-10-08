@@ -1,7 +1,7 @@
 use juniper::GraphQLObject;
 use juniper_relay_helpers::{RelayConnection, RelayIdentifier};
 
-use crate::schema::identifiers::{EntityType};
+use crate::schema::identifiers::EntityType;
 
 /// "Database" row for a location.
 #[derive(Clone)]
@@ -22,9 +22,9 @@ impl From<LocationRow> for Location {
     fn from(row: LocationRow) -> Self {
         Location {
             id: RelayIdentifier::new(row.id, EntityType::Location),
-            name: row.name
+            name: row.name,
         }
-    }   
+    }
 }
 
 // ----------- Test data ------------------
@@ -33,15 +33,15 @@ pub fn get_location_test_data() -> Vec<LocationRow> {
     vec![
         LocationRow {
             id: "lumiere".to_string(),
-            name: "Lumiére".to_string()
+            name: "Lumiére".to_string(),
         },
         LocationRow {
             id: "esquies-nest".to_string(),
-            name: "Esquie's Nest".to_string()
+            name: "Esquie's Nest".to_string(),
         },
         LocationRow {
             id: "monocos-station".to_string(),
-            name: "Monoco's Station".to_string()
+            name: "Monoco's Station".to_string(),
         },
     ]
 }

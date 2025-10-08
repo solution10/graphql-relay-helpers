@@ -1,7 +1,7 @@
-use proc_macro2::{Ident, Span};
 use proc_macro::TokenStream;
+use proc_macro2::{Ident, Span};
 use quote::quote;
-use syn::{parse_macro_input, Data, DeriveInput};
+use syn::{Data, DeriveInput, parse_macro_input};
 
 /// Macro that will generate Connection and Edge structs for you to use when returning lists.
 #[proc_macro_derive(RelayConnection)]
@@ -14,9 +14,15 @@ pub fn macro_relay_connection_node(input: TokenStream) -> TokenStream {
             let connection_gql_desc = format!("Connection type for {}.", input.ident);
             let edge_gql_name = format!("{}Edge", input.ident);
             let edge_gql_desc = format!("Edge type for {}.", input.ident);
-            let connection_name = Ident::new(&format!("{}RelayConnection", input.ident), Span::mixed_site());
+            let connection_name = Ident::new(
+                &format!("{}RelayConnection", input.ident),
+                Span::mixed_site(),
+            );
             let edge_name = Ident::new(&format!("{}RelayEdge", input.ident), Span::mixed_site());
-            let edge_trait_name = Ident::new(&format!("{}RelayEdgeTrait", input.ident), Span::mixed_site());
+            let edge_trait_name = Ident::new(
+                &format!("{}RelayEdgeTrait", input.ident),
+                Span::mixed_site(),
+            );
             let struct_name = input.ident;
 
             quote! {
@@ -87,7 +93,7 @@ pub fn macro_relay_connection_node(input: TokenStream) -> TokenStream {
                 }
             }
         }
-        _ => quote! {}
+        _ => quote! {},
     };
 
     out.into()
@@ -154,7 +160,7 @@ pub fn macro_type_discriminator(input: TokenStream) -> TokenStream {
                 }
             }
         }
-        _ => quote! {}
+        _ => quote! {},
     };
 
     out.into()
