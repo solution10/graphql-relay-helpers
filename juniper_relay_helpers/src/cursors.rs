@@ -89,7 +89,7 @@ pub fn cursor_from_encoded_string<T>(input: &str) -> Result<T, CursorError> wher
 }
 
 /// A simple offset-based cursor.
-#[derive(Debug, GraphQLScalar)]
+#[derive(Debug, GraphQLScalar, Default)]
 #[graphql(
     name = "OffsetCursor",
     to_output_with = Self::to_output,
@@ -106,12 +106,6 @@ pub struct OffsetCursor {
 impl OffsetCursor {
     pub fn new(offset: i32, first: Option<i32>) -> Self {
         OffsetCursor { offset, first }
-    }
-}
-
-impl Default for OffsetCursor {
-    fn default() -> Self {
-        OffsetCursor { offset: 0, first: None }
     }
 }
 
