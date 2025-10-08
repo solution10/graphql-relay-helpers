@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/solution10/juniper-relay-helpers/compare/juniper_relay_helpers_codegen-v0.1.2...juniper_relay_helpers_codegen-v0.1.3) (2025-10-08)
+
+
+### Miscellaneous
+
+* reformat ([#18](https://github.com/solution10/juniper-relay-helpers/issues/18)) ([cda3109](https://github.com/solution10/juniper-relay-helpers/commit/cda3109c8354f38d983765a813603b5f145ec49f))
+
 ## [0.1.2](https://github.com/solution10/juniper-relay-helpers/compare/juniper_relay_helpers_codegen-v0.1.1...juniper_relay_helpers_codegen-v0.1.2) (2025-10-07)
 
 
