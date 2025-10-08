@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.1.3](https://github.com/solution10/juniper-relay-helpers/compare/juniper_relay_helpers-v0.1.2...juniper_relay_helpers-v0.1.3) (2025-10-08)
+
+
+### Features
+
+* add new() to OffsetCursor ([#16](https://github.com/solution10/juniper-relay-helpers/issues/16)) ([210427d](https://github.com/solution10/juniper-relay-helpers/commit/210427d0edd1649745be2788702b7bd2e4b7f8f5))
+
+
+### Miscellaneous
+
+* reformat ([#18](https://github.com/solution10/juniper-relay-helpers/issues/18)) ([cda3109](https://github.com/solution10/juniper-relay-helpers/commit/cda3109c8354f38d983765a813603b5f145ec49f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * juniper_relay_helpers_codegen bumped from 0.1.2 to 0.1.3
+
 ## [0.1.2](https://github.com/solution10/juniper-relay-helpers/compare/juniper_relay_helpers-v0.1.1...juniper_relay_helpers-v0.1.2) (2025-10-07)
 
 
