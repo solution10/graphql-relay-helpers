@@ -89,19 +89,24 @@ pub fn cursor_from_encoded_string<T>(input: &str) -> Result<T, CursorError> wher
 }
 
 /// A simple offset-based cursor.
-#[derive(Debug, GraphQLScalar)]
+#[derive(Debug, GraphQLScalar, Default)]
 #[graphql(
     name = "OffsetCursor",
     to_output_with = Self::to_output,
     from_input_with = Self::from_input
 )]
-#[derive(Default)]
 pub struct OffsetCursor {
     /// The offset of the cursor (how many items to skip).
     pub offset: i32,
 
     /// The number of items to return.
     pub first: Option<i32>,
+}
+
+impl OffsetCursor {
+    pub fn new(offset: i32, first: Option<i32>) -> Self {
+        OffsetCursor { offset, first }
+    }
 }
 
 impl Cursor for OffsetCursor {
@@ -183,43 +188,63 @@ impl Default for StringCursor {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Cursor, StringCursor};
-    use crate::cursors::OffsetCursor;
 
-    #[test]
-    fn test_offset_cursor_raw_string() {
-        let cursor = OffsetCursor { offset: 1, first: Some(10) };
-        assert_eq!(cursor.to_string(), "offset:1:10");
+    mod offset_cursor_tests {
+        use crate::{Cursor, OffsetCursor};
+
+        #[test]
+        fn test_new_offset_first() {
+            let cursor = OffsetCursor::new(1, Some(10));
+            assert_eq!(cursor.offset, 1);
+            assert_eq!(cursor.first, Some(10));
+        }
+
+        #[test]
+        fn test_offset_cursor_default() {
+            let cursor = OffsetCursor::default();
+            assert_eq!(cursor.offset, 0);
+            assert_eq!(cursor.first, None);
+        }
+
+        #[test]
+        fn test_offset_cursor_raw_string() {
+            let cursor = OffsetCursor { offset: 1, first: Some(10) };
+            assert_eq!(cursor.to_string(), "offset:1:10");
+        }
+
+        #[test]
+        fn test_offset_cursor_encoded_string() {
+            let cursor = OffsetCursor { offset: 1, first: Some(10) };
+            assert_eq!(cursor.to_encoded_string(), "b2Zmc2V0OjE6MTA=");
+        }
+
+        #[test]
+        fn test_offset_cursor_from_encoded_string() {
+            let cursor = OffsetCursor::from_encoded_string("b2Zmc2V0OjE6MTA=").unwrap();
+            assert_eq!(cursor.offset, 1);
+            assert_eq!(cursor.first, Some(10));
+        }
     }
 
-    #[test]
-    fn test_offset_cursor_encoded_string() {
-        let cursor = OffsetCursor { offset: 1, first: Some(10) };
-        assert_eq!(cursor.to_encoded_string(), "b2Zmc2V0OjE6MTA=");
-    }
+    mod string_cursor_tests {
+        use crate::{Cursor, StringCursor};
 
-    #[test]
-    fn test_offset_cursor_from_encoded_string() {
-        let cursor = OffsetCursor::from_encoded_string("b2Zmc2V0OjE6MTA=").unwrap();
-        assert_eq!(cursor.offset, 1);
-        assert_eq!(cursor.first, Some(10));
-    }
+        #[test]
+        fn test_string_cursor_raw_string() {
+            let cursor = StringCursor { value: "some-cursor".to_string() };
+            assert_eq!(cursor.to_string(), "string:some-cursor");
+        }
 
-    #[test]
-    fn test_string_cursor_raw_string() {
-        let cursor = StringCursor { value: "some-cursor".to_string() };
-        assert_eq!(cursor.to_string(), "string:some-cursor");
-    }
+        #[test]
+        fn test_string_cursor_encoded_string() {
+            let cursor = StringCursor { value: "some-cursor".to_string() };
+            assert_eq!(cursor.to_encoded_string(), "c3RyaW5nOnNvbWUtY3Vyc29y");
+        }
 
-    #[test]
-    fn test_string_cursor_encoded_string() {
-        let cursor = StringCursor { value: "some-cursor".to_string() };
-        assert_eq!(cursor.to_encoded_string(), "c3RyaW5nOnNvbWUtY3Vyc29y");
-    }
-
-    #[test]
-    fn test_string_cursor_from_encoded_string() {
-        let cursor = StringCursor::from_encoded_string("c3RyaW5nOnNvbWUtY3Vyc29y").unwrap();
-        assert_eq!(cursor.value, "some-cursor");
+        #[test]
+        fn test_string_cursor_from_encoded_string() {
+            let cursor = StringCursor::from_encoded_string("c3RyaW5nOnNvbWUtY3Vyc29y").unwrap();
+            assert_eq!(cursor.value, "some-cursor");
+        }
     }
 }
