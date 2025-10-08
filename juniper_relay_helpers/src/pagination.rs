@@ -1,6 +1,6 @@
-use juniper::GraphQLObject;
-use crate::{cursor_from_encoded_string, Cursor};
 use crate::cursor_errors::CursorError;
+use crate::{Cursor, cursor_from_encoded_string};
+use juniper::GraphQLObject;
 
 /// Represents the Relay spec pagination object
 /// <https://relay.dev/docs/guides/graphql-server-specification/>
@@ -18,12 +18,16 @@ pub struct PageInfo {
 
     /// An opaque cursor that when passed to after: in a query will return the previous page of
     /// results.
-    #[graphql(description = "An opaque cursor that when passed to after: in a query will return the previous page of results.")]
+    #[graphql(
+        description = "An opaque cursor that when passed to after: in a query will return the previous page of results."
+    )]
     pub start_cursor: Option<String>,
 
     /// An opaque cursor that when passed to after: in a query will return the following page of
     /// results.
-    #[graphql(description = "An opaque cursor that when passed to after: in a query will return the following page of results.")]
+    #[graphql(
+        description = "An opaque cursor that when passed to after: in a query will return the following page of results."
+    )]
     pub end_cursor: Option<String>,
 }
 
@@ -61,14 +65,17 @@ impl PageRequest {
     pub fn new(first: Option<i32>, after: Option<impl Cursor>) -> Self {
         PageRequest {
             first,
-            after: after.map(|after| after.to_encoded_string())
+            after: after.map(|after| after.to_encoded_string()),
         }
     }
 
     /// Parses the `after` portion of the PageRequest into the appropriate cursor type.
     /// Will return `None` if the `Option` is empty, and returns wrapped in a `Result` in case the
     /// decoding of the cursor fails.
-    pub fn parsed_cursor<T>(&self) -> Result<Option<T>, CursorError> where T: Cursor<CursorType = T> {
+    pub fn parsed_cursor<T>(&self) -> Result<Option<T>, CursorError>
+    where
+        T: Cursor<CursorType = T>,
+    {
         if self.after.is_none() {
             return Ok(None);
         }
@@ -77,21 +84,29 @@ impl PageRequest {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use crate::{OffsetCursor, PageRequest, StringCursor};
 
     #[test]
     fn test_new() {
-        let pr = PageRequest::new(Some(10), Some(StringCursor::new("some-string-cursor".to_string())));
+        let pr = PageRequest::new(
+            Some(10),
+            Some(StringCursor::new("some-string-cursor".to_string())),
+        );
         assert_eq!(pr.first, Some(10));
-        assert_eq!(pr.after, Some("c3RyaW5nOnNvbWUtc3RyaW5nLWN1cnNvcg==".to_string()));
+        assert_eq!(
+            pr.after,
+            Some("c3RyaW5nOnNvbWUtc3RyaW5nLWN1cnNvcg==".to_string())
+        );
     }
 
     #[test]
     fn test_decoding_cursor_from_page_request() {
-        let request = PageRequest { first: Some(10), after: Some("b2Zmc2V0OjE6MTA=".to_string()) };
+        let request = PageRequest {
+            first: Some(10),
+            after: Some("b2Zmc2V0OjE6MTA=".to_string()),
+        };
         let decoded_cursor = request.parsed_cursor::<OffsetCursor>().unwrap();
         assert_eq!(decoded_cursor.unwrap().offset, 1);
     }

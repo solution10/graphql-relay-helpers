@@ -1,5 +1,5 @@
-use crate::cursor_provider::{CursorProvider};
-use crate::{RelayEdge};
+use crate::RelayEdge;
+use crate::cursor_provider::CursorProvider;
 
 /// Common trait for Relay connections. Will be implemented by the codegen.
 pub trait RelayConnection {
@@ -15,15 +15,15 @@ pub trait RelayConnection {
         nodes: &[Self::NodeType],
         total_items: i32,
         cursor_provider: impl CursorProvider,
-        page_request: Option<crate::PageRequest>
+        page_request: Option<crate::PageRequest>,
     ) -> Self;
 }
 
 #[cfg(test)]
 mod tests {
-    use juniper::GraphQLObject;
-    use juniper_relay_helpers_codegen::{RelayConnection};
     use crate::{OffsetCursor, PageInfo};
+    use juniper::GraphQLObject;
+    use juniper_relay_helpers_codegen::RelayConnection;
 
     #[derive(Debug, GraphQLObject, RelayConnection, Clone, Eq, PartialEq)]
     pub struct User {
@@ -39,8 +39,8 @@ mod tests {
                 start_cursor: None,
                 end_cursor: None,
                 has_prev_page: false,
-                has_next_page: false
-            }
+                has_next_page: false,
+            },
         };
 
         assert_eq!(conn.count, 12);
@@ -53,7 +53,7 @@ mod tests {
             node: User {
                 name: "Lune".to_owned(),
             },
-            cursor: Some("some-string".to_owned())
+            cursor: Some("some-string".to_owned()),
         };
         assert_eq!(edge.node.name, "Lune");
         assert_eq!(edge.cursor, Some("some-string".to_owned()));
@@ -61,15 +61,24 @@ mod tests {
 
     #[test]
     fn edge_implementation_new() {
-        let edge = UserRelayEdge::new(User {
-            name: "Lune".to_owned(),
-        }, OffsetCursor { offset: 0, first: Some(10) });
+        let edge = UserRelayEdge::new(
+            User {
+                name: "Lune".to_owned(),
+            },
+            OffsetCursor {
+                offset: 0,
+                first: Some(10),
+            },
+        );
         assert_eq!(edge.node.name, "Lune");
         assert_eq!(edge.cursor, Some("b2Zmc2V0OjA6MTA=".into()));
 
-        let edge2 = UserRelayEdge::new_raw_cursor(User {
-            name: "Sciel".to_owned(),
-        }, Some("some-cursor".to_owned()));
+        let edge2 = UserRelayEdge::new_raw_cursor(
+            User {
+                name: "Sciel".to_owned(),
+            },
+            Some("some-cursor".to_owned()),
+        );
         assert_eq!(edge2.node.name, "Sciel");
         assert_eq!(edge2.cursor, Some("some-cursor".into()));
     }

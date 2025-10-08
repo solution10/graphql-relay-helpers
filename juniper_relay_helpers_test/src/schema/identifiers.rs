@@ -4,5 +4,5 @@ use juniper_relay_helpers::IdentifierTypeDiscriminator;
 #[derive(Debug, Clone, Copy, PartialEq, Eq, IdentifierTypeDiscriminator)]
 pub enum EntityType {
     Character,
-    Location
+    Location,
 }

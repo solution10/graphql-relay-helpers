@@ -30,7 +30,6 @@ impl From<FromUtf8Error> for CursorError {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use crate::cursor_errors::CursorError;
@@ -38,7 +37,10 @@ mod tests {
     #[test]
     fn display_types() {
         assert_eq!(format!("{}", CursorError::InvalidCursor), "Invalid cursor");
-        assert_eq!(format!("{}", CursorError::InvalidCursorEncoding), "Invalid cursor encoding");
+        assert_eq!(
+            format!("{}", CursorError::InvalidCursorEncoding),
+            "Invalid cursor encoding"
+        );
     }
 
     #[test]

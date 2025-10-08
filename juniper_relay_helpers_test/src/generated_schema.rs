@@ -28,23 +28,23 @@ mod integration_tests {
                 edges: vec![
                     UserRelayEdge {
                         node: User {
-                            name: "Lune".to_owned()
+                            name: "Lune".to_owned(),
                         },
-                        cursor: None
+                        cursor: None,
                     },
                     UserRelayEdge {
                         node: User {
-                            name: "Sciel".to_owned()
+                            name: "Sciel".to_owned(),
                         },
-                        cursor: Some("some-string".to_owned())
-                    }
+                        cursor: Some("some-string".to_owned()),
+                    },
                 ],
                 page_info: PageInfo {
                     start_cursor: None,
                     end_cursor: None,
                     has_prev_page: false,
-                    has_next_page: false
-                }
+                    has_next_page: false,
+                },
             })
         }
 
@@ -56,8 +56,8 @@ mod integration_tests {
                     start_cursor: None,
                     end_cursor: None,
                     has_prev_page: false,
-                    has_next_page: false
-                }
+                    has_next_page: false,
+                },
             })
         }
     }

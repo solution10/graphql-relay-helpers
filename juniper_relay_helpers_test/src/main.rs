@@ -6,17 +6,17 @@
 //! Application is also used for integration tests.
 //!
 
-use std::sync::Arc;
+use crate::schema::{Context, QueryRoot, Schema, get_character_test_data, get_location_test_data};
+use axum::Router;
 use axum::extract::State;
 use axum::response::{Html, IntoResponse};
-use axum::Router;
 use axum::routing::{get, post};
-use juniper::{EmptyMutation, EmptySubscription};
 use juniper::http::graphiql;
+use juniper::{EmptyMutation, EmptySubscription};
 use juniper_axum::extract::JuniperRequest;
 use juniper_axum::response::JuniperResponse;
+use std::sync::Arc;
 use tracing::info;
-use crate::schema::{get_character_test_data, get_location_test_data, Context, QueryRoot, Schema};
 
 mod generated_schema;
 mod schema;
@@ -29,7 +29,11 @@ struct AppContext {
 
 fn build_app() -> Router {
     // Build the schema:
-    let schema = Arc::new(Schema::new(QueryRoot, EmptyMutation::new(), EmptySubscription::new()));
+    let schema = Arc::new(Schema::new(
+        QueryRoot,
+        EmptyMutation::new(),
+        EmptySubscription::new(),
+    ));
 
     // Build the app context:
     let ctx = AppContext {
@@ -37,7 +41,7 @@ fn build_app() -> Router {
         graphql_context: Context {
             characters: get_character_test_data(),
             locations: get_location_test_data(),
-        }
+        },
     };
 
     // Build the server:
@@ -80,8 +84,8 @@ async fn graphql_handler(
 
 #[cfg(test)]
 mod integration_tests {
-    use axum_test::TestServer;
     use crate::build_app;
+    use axum_test::TestServer;
 
     #[tokio::test]
     async fn test_server_starts() {
@@ -132,15 +136,15 @@ mod integration_tests {
             }";
 
     mod connection_tests {
-        use axum_test::expect_json::__private::serde_json;
-        use axum_test::expect_json::__private::serde_json::json;
-        use axum_test::expect_json;
-        use axum_test::TestServer;
-        use serde::{Deserialize, Serialize};
-        use juniper_relay_helpers::RelayIdentifier;
         use crate::build_app;
         use crate::integration_tests::{ALL_CHARACTERS_QUERY, ALL_LOCATIONS_QUERY};
-        use crate::schema::{get_character_test_data, get_location_test_data, EntityType};
+        use crate::schema::{EntityType, get_character_test_data, get_location_test_data};
+        use axum_test::TestServer;
+        use axum_test::expect_json;
+        use axum_test::expect_json::__private::serde_json;
+        use axum_test::expect_json::__private::serde_json::json;
+        use juniper_relay_helpers::RelayIdentifier;
+        use serde::{Deserialize, Serialize};
 
         #[derive(Serialize, Deserialize, Debug, Clone)]
         struct GraphQLPayload {
@@ -157,7 +161,7 @@ mod integration_tests {
                 .post("/graphql")
                 .json(&GraphQLPayload {
                     query: ALL_CHARACTERS_QUERY.to_string(),
-                    variables: Some(serde_json::Value::Object(serde_json::Map::new()))
+                    variables: Some(serde_json::Value::Object(serde_json::Map::new())),
                 })
                 .await;
 
@@ -196,7 +200,7 @@ mod integration_tests {
                 .post("/graphql")
                 .json(&GraphQLPayload {
                     query: ALL_LOCATIONS_QUERY.to_string(),
-                    variables: Some(serde_json::Value::Object(serde_json::Map::new()))
+                    variables: Some(serde_json::Value::Object(serde_json::Map::new())),
                 })
                 .await;
 
@@ -234,7 +238,7 @@ mod integration_tests {
                 .post("/graphql")
                 .json(&GraphQLPayload {
                     query: ALL_CHARACTERS_QUERY.to_string(),
-                    variables: Some(serde_json::Value::Object(serde_json::Map::new()))
+                    variables: Some(serde_json::Value::Object(serde_json::Map::new())),
                 })
                 .await;
 
@@ -268,7 +272,7 @@ mod integration_tests {
                 .post("/graphql")
                 .json(&GraphQLPayload {
                     query: ALL_LOCATIONS_QUERY.to_string(),
-                    variables: Some(serde_json::Value::Object(serde_json::Map::new()))
+                    variables: Some(serde_json::Value::Object(serde_json::Map::new())),
                 })
                 .await;
 

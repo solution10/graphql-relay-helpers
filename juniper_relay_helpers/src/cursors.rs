@@ -1,7 +1,7 @@
-use std::fmt::{Display, Formatter};
+use crate::cursor_errors::CursorError;
 use base64::prelude::*;
 use juniper::{GraphQLScalar, ParseScalarResult, ParseScalarValue, ScalarToken, ScalarValue};
-use crate::cursor_errors::CursorError;
+use std::fmt::{Display, Formatter};
 
 /// Cursor struct that builds into an opaque string.
 /// Cursors are present both in the edges and in the PageInfo within the Connection.
@@ -61,7 +61,7 @@ pub trait Cursor {
         let res = Self::from_encoded_string(input);
         match res {
             Ok(cursor) => Ok(cursor),
-            Err(err) => Err(err.to_string().into_boxed_str())
+            Err(err) => Err(err.to_string().into_boxed_str()),
         }
     }
 
@@ -83,7 +83,10 @@ pub trait Cursor {
 ///
 /// `decoded_cursor` will be a `Result<OffsetCursor, CursorError>` in case the decoding fails.
 ///
-pub fn cursor_from_encoded_string<T>(input: &str) -> Result<T, CursorError> where T: Cursor<CursorType = T> {
+pub fn cursor_from_encoded_string<T>(input: &str) -> Result<T, CursorError>
+where
+    T: Cursor<CursorType = T>,
+{
     let cursor = T::from_encoded_string(input)?;
     Ok(cursor)
 }
@@ -126,11 +129,10 @@ impl Cursor for OffsetCursor {
         }
 
         // Offset is always defined
-        let offset = parts[1].parse::<i32>()
-            .unwrap_or(0);
+        let offset = parts[1].parse::<i32>().unwrap_or(0);
 
         // First is optional and can be missing
-        let first: Option<i32> = if parts.len() == 2{
+        let first: Option<i32> = if parts.len() == 2 {
             None
         } else {
             parts[2].parse::<i32>().ok()
@@ -145,7 +147,6 @@ impl Display for OffsetCursor {
         write!(f, "{}", self.to_raw_string())
     }
 }
-
 
 /// Built-in cursor type for when the cursor is just a string. Usually useful for things like
 /// NoSQL systems that return something opaque to you.
@@ -169,8 +170,10 @@ impl Cursor for StringCursor {
     }
 
     fn new(_raw: &str, parts: Vec<&str>) -> Result<Self::CursorType, CursorError> {
-        let raw_parts_value= parts[1].to_string();
-        Ok(StringCursor { value: raw_parts_value })
+        let raw_parts_value = parts[1].to_string();
+        Ok(StringCursor {
+            value: raw_parts_value,
+        })
     }
 }
 impl Display for StringCursor {
@@ -181,10 +184,11 @@ impl Display for StringCursor {
 
 impl Default for StringCursor {
     fn default() -> Self {
-        StringCursor { value: "".to_string() }
+        StringCursor {
+            value: "".to_string(),
+        }
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -208,13 +212,19 @@ mod tests {
 
         #[test]
         fn test_offset_cursor_raw_string() {
-            let cursor = OffsetCursor { offset: 1, first: Some(10) };
+            let cursor = OffsetCursor {
+                offset: 1,
+                first: Some(10),
+            };
             assert_eq!(cursor.to_string(), "offset:1:10");
         }
 
         #[test]
         fn test_offset_cursor_encoded_string() {
-            let cursor = OffsetCursor { offset: 1, first: Some(10) };
+            let cursor = OffsetCursor {
+                offset: 1,
+                first: Some(10),
+            };
             assert_eq!(cursor.to_encoded_string(), "b2Zmc2V0OjE6MTA=");
         }
 
@@ -231,13 +241,17 @@ mod tests {
 
         #[test]
         fn test_string_cursor_raw_string() {
-            let cursor = StringCursor { value: "some-cursor".to_string() };
+            let cursor = StringCursor {
+                value: "some-cursor".to_string(),
+            };
             assert_eq!(cursor.to_string(), "string:some-cursor");
         }
 
         #[test]
         fn test_string_cursor_encoded_string() {
-            let cursor = StringCursor { value: "some-cursor".to_string() };
+            let cursor = StringCursor {
+                value: "some-cursor".to_string(),
+            };
             assert_eq!(cursor.to_encoded_string(), "c3RyaW5nOnNvbWUtY3Vyc29y");
         }
 

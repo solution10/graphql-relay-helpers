@@ -251,22 +251,22 @@
 
 extern crate self as juniper_relay_helpers;
 
-mod pagination;
-mod cursors;
+mod connections;
 mod cursor_errors;
 mod cursor_provider;
-mod identifier;
-mod connections;
+mod cursors;
 mod edges;
+mod identifier;
+mod pagination;
 
 // From other crates in the workspace:
-pub use juniper_relay_helpers_codegen::{RelayConnection, IdentifierTypeDiscriminator};
+pub use juniper_relay_helpers_codegen::{IdentifierTypeDiscriminator, RelayConnection};
 
 // From this crate:
-pub use pagination::*;
-pub use cursors::*;
-pub use cursor_errors::*;
-pub use identifier::*;
 pub use connections::*;
-pub use edges::*;
+pub use cursor_errors::*;
 pub use cursor_provider::*;
+pub use cursors::*;
+pub use edges::*;
+pub use identifier::*;
+pub use pagination::*;
